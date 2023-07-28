@@ -1,8 +1,10 @@
-import AuthUtil from '@/utils/AuthUtil';
+"use client"
+
+import AuthUtil, { UserDetailsFromSession } from '@/utils/AuthUtil';
 import NavBarView from './NavBar.view'
 
 const NavBar: () => JSX.Element = () => {
-    const isUserLoggedIn : boolean = AuthUtil.getIsUserLoggedIn();
+    const isUserLoggedIn: UserDetailsFromSession = AuthUtil.getUserFromSession();
     return (
         <NavBarView isUserLoggedIn={isUserLoggedIn}/>
     )

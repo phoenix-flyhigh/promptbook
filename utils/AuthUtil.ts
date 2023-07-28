@@ -1,10 +1,22 @@
+"use client"
+
+import { useSession } from "next-auth/react";
+
+export type UserDetailsFromSession =  {
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+    image?: string | null | undefined;
+} | undefined;
+
 interface IAuthUtil {
-    getIsUserLoggedIn: () => boolean;
+    getUserFromSession: () => UserDetailsFromSession;
 }
 
 const AuthUtil: IAuthUtil = {
-    getIsUserLoggedIn: () => {
-        return true;
+    getUserFromSession: () => {
+        const {data: session} = useSession();
+        
+        return session?.user
     }
 }
 

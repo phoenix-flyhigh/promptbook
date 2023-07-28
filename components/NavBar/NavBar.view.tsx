@@ -2,18 +2,29 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { signOut } from "next-auth/react";
-import { useState } from "react";
+import { getProviders, signIn, signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { UserDetailsFromSession } from "@/utils/AuthUtil";
 
 interface NavBarViewProps {
-    isUserLoggedIn: boolean
+    isUserLoggedIn: UserDetailsFromSession
 }
 
 const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
     isUserLoggedIn
 }: NavBarViewProps) => {
+    const [providers, setProviders]: any = useState();
 
     const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
+
+    useEffect(() => {
+        const setUpProviders = async () => {
+            const response = await getProviders();
+            setProviders(response)
+        }
+        setUpProviders();
+    }, [])
+
 
     return (
         <nav className="flex-between w-full mb-16 pt-3">
@@ -39,7 +50,7 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                             <Link href="/profile">
                                 <Image
                                     data-testid="tid-profile-icon-desktop"
-                                    src="/images/logo.svg"
+                                    src={isUserLoggedIn.image ?? ""}
                                     alt="Profile photo"
                                     width={37}
                                     height={37}
@@ -48,7 +59,17 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                             </Link>
                         </div>
                     ) :
-                        (<> </>)
+                        (<> 
+                        {providers && Object.values(providers).map((provider: any) => (
+                                    <button
+                                        type="button"
+                                        key={provider.name}
+                                        className="black_btn"
+                                        onClick={() => signIn(provider.id)}>
+                                        Sign In
+                                    </button>
+                                ))}
+                                </>)
                 }
             </div>
 
@@ -58,7 +79,7 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                         <div className="flex" >
                             <Image
                                 data-testid="tid-profile-icon-mobile"
-                                src="/images/logo.svg"
+                                src={isUserLoggedIn.image ?? ""}
                                 alt="Profile photo"
                                 width={37}
                                 height={37}
@@ -96,7 +117,18 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                                 )
                             }
                         </div>
-                    ) : (<></>)
+                    ) : (<>
+                    {providers && Object.values(providers).map((provider: any) => (
+                                <button
+                                    type="button"
+                                    key={provider.name}
+                                    className="black_btn"
+                                    onClick={() => signIn(provider.id)}>
+                                    Sign In
+                                </button>
+                            )
+                            )}
+                            </>)
                 }
             </div>
         </nav>
