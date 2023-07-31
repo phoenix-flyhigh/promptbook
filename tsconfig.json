@@ -23,6 +23,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/auth/[...nextauth]/route.js", "utils/database.js", "models/user.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/auth/[...nextauth]/route.js", "utils/database.js", "models/user.ts", "app/create-prompt/__test__/CreatePrompt.spec.jsx", "app/create-prompt/__test__/CreatePrompt.spec.jsx"],
   "exclude": ["node_modules"]
 }
