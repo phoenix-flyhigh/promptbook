@@ -1,35 +1,30 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import NavBar from "@/components/NavBar";
-import AuthUtil from "@/utils/AuthUtil";
-import Provider from "@/utils/Provider";
-import * as AuthProviders from "next-auth/react";
+import { SessionProvider } from 'next-auth/react'
 
 const renderNavBar = () => render(
-    <Provider>
+    <SessionProvider session={{
+        expires: "",
+        user: {
+            name: "s",
+            image: "/logo.png"
+        }
+    }}>
         <NavBar />
-    </Provider>
+    </SessionProvider>
 );
 
-//WIP
-describe.skip("NavBar component tests", () => {
+//TODO: tests for sign in button in desktop and mobile
+
+describe("NavBar component tests", () => {
     it("Should render the app logo", () => {
-        jest.spyOn(AuthProviders, "getProviders").mockResolvedValue(null)
-        renderNavBar();
+        renderNavBar()
 
         expect(screen.getByTestId("tid-app-logo")).toBeInTheDocument()
     })
 })
 
-describe.skip("NavBar component tests for signedIn users", () => {
-
-    beforeEach(() => {
-        jest.spyOn(AuthUtil, "getUserFromSession").mockReturnValue({
-            name: "123",
-            email: "123@gmail.com",
-            image: ""
-        })
-    })
-
+describe("NavBar component tests for signedIn users", () => {
     it("Should render the the menu items in a dropdown for mobile", () => {
         jest.spyOn(window.screen, "width", "get").mockReturnValue(200);
 
@@ -41,7 +36,7 @@ describe.skip("NavBar component tests for signedIn users", () => {
         fireEvent.click(profileIcon);
 
         const dropdown: HTMLElement = screen.getByTestId("tid-nav-dropdown");
-        const createPromptOption: HTMLElement[] = screen.getAllByText("Create Prompt");
+        const createPromptOption: HTMLElement[] = screen.getAllByText("Create Post");
         const signOutOption: HTMLElement[] = screen.getAllByText("Sign Out");
         const myProfileOption: HTMLElement = screen.getByText("My Profile");
 
@@ -57,7 +52,7 @@ describe.skip("NavBar component tests for signedIn users", () => {
 
         expect(profileIcon).toBeInTheDocument();
 
-        const createPromptOption: HTMLElement = screen.getByText("Create Prompt");
+        const createPromptOption: HTMLElement = screen.getByText("Create Post");
         const signOutOption: HTMLElement = screen.getByText("Sign Out");
 
         expect(createPromptOption).toBeInTheDocument();
