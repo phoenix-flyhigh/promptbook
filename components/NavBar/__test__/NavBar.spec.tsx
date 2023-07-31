@@ -1,24 +1,18 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import NavBar from "@/components/NavBar";
-import { SessionProvider } from 'next-auth/react'
-
-const renderNavBar = () => render(
-    <SessionProvider session={{
-        expires: "",
-        user: {
-            name: "s",
-            image: "/logo.png"
-        }
-    }}>
-        <NavBar />
-    </SessionProvider>
-);
+import renderWithSession from "@/utils/TestUtil";
 
 //TODO: tests for sign in button in desktop and mobile
 
 describe("NavBar component tests", () => {
     it("Should render the app logo", () => {
-        renderNavBar()
+        renderWithSession(<NavBar />, {
+            expires: "",
+            user: {
+                name: "s",
+                image: "/logo.png"
+            }
+        })
 
         expect(screen.getByTestId("tid-app-logo")).toBeInTheDocument()
     })
@@ -28,7 +22,13 @@ describe("NavBar component tests for signedIn users", () => {
     it("Should render the the menu items in a dropdown for mobile", () => {
         jest.spyOn(window.screen, "width", "get").mockReturnValue(200);
 
-        renderNavBar();
+        renderWithSession(<NavBar />, {
+            expires: "",
+            user: {
+                name: "s",
+                image: "/logo.png"
+            }
+        })
         const profileIcon: HTMLImageElement = screen.getByTestId("tid-profile-icon-mobile");
 
         expect(profileIcon).toBeInTheDocument();
@@ -47,7 +47,13 @@ describe("NavBar component tests for signedIn users", () => {
     })
 
     it("Should render the the menu items in the nav bar for desktop", () => {
-        renderNavBar();
+        renderWithSession(<NavBar />, {
+            expires: "",
+            user: {
+                name: "s",
+                image: "/logo.png"
+            }
+        });
         const profileIcon: HTMLImageElement = screen.getByTestId("tid-profile-icon-desktop");
 
         expect(profileIcon).toBeInTheDocument();

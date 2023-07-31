@@ -1,8 +1,8 @@
-import { render, screen, fireEvent } from "@testing-library/react"
-import { SessionProvider } from "next-auth/react";
+import { screen, fireEvent } from "@testing-library/react"
 import "isomorphic-fetch"
 import CreatePrompt from "../page"
 import PromptService from "@/utils/PromptService";
+import renderWithSession from "@/utils/TestUtil";
 
 const routerSpy = jest.fn()
 
@@ -19,11 +19,7 @@ jest.mock("next/navigation", () => {
 describe("Create post page tests", () => {
     let postSpy: jest.SpyInstance<any>;
     beforeEach(() => {
-        render(
-            <SessionProvider session={null}>
-                <CreatePrompt />
-            </SessionProvider>
-        );
+        renderWithSession(<CreatePrompt />);
         postSpy = jest.spyOn(PromptService, "postPrompt").mockResolvedValue({
             prompt: "",
             tag: ""
