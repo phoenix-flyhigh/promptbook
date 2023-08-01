@@ -1,3 +1,5 @@
+import Feed from "@/components/Feed"
+
 const Home: () => JSX.Element = () => (
   <section className="w-full flex-col flex-center">
     <h1 className="head_text text_center" data-testid="tid-title">
@@ -9,6 +11,7 @@ const Home: () => JSX.Element = () => (
       Promptopia is an open-source AI prompting tool for modern world to
       discover, create and share creative prompts
     </p>
+    <Feed/>
   </section>
 )
 export default Home

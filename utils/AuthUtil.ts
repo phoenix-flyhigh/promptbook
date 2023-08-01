@@ -6,6 +6,7 @@ export type UserDetailsFromSession =  {
     name?: string | null | undefined;
     email?: string | null | undefined;
     image?: string | null | undefined;
+    _id?: string | null | undefined;
 } | undefined;
 
 interface IAuthUtil {

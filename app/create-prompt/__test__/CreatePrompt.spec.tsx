@@ -3,6 +3,7 @@ import "isomorphic-fetch"
 import CreatePrompt from "../page"
 import PromptService from "@/utils/PromptService";
 import renderWithSession from "@/utils/TestUtil";
+import mockPostsResponse from "@/utils/TestData";
 
 const routerSpy = jest.fn()
 
@@ -19,11 +20,8 @@ jest.mock("next/navigation", () => {
 describe("Create post page tests", () => {
     let postSpy: jest.SpyInstance<any>;
     beforeEach(() => {
+        postSpy = jest.spyOn(PromptService, "postPrompt").mockResolvedValue(mockPostsResponse[0]);
         renderWithSession(<CreatePrompt />);
-        postSpy = jest.spyOn(PromptService, "postPrompt").mockResolvedValue({
-            prompt: "",
-            tag: ""
-        });
     });
 
     afterEach(() => {
@@ -32,11 +30,6 @@ describe("Create post page tests", () => {
     })
 
     it("Should render the form to create a post", () => {
-        jest.spyOn(PromptService, "postPrompt").mockResolvedValue({
-            prompt: "",
-            tag: ""
-        })
-
         expect(screen.getByText("Your AI Prompt")).toBeInTheDocument()
     });
 
