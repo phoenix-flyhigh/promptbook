@@ -1,12 +1,13 @@
 import PromptService from '@/utils/PromptService'
 import mockPostsResponse from '@/utils/TestData'
-import { render, screen, waitFor } from '@testing-library/react'
+import renderWithSession from '@/utils/TestUtil'
+import { screen, waitFor } from '@testing-library/react'
 import Home from '../page'
 
 describe('Home page tests', () => {
   beforeEach(() => {
     jest.spyOn(PromptService, "getPrompts").mockResolvedValue(mockPostsResponse)
-    render(<Home />)
+    renderWithSession(<Home />)
   })
   it('Should render a title', () => {
     const title: HTMLElement = screen.getByTestId("tid-title")

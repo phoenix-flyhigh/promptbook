@@ -1,12 +1,23 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { screen, waitFor, fireEvent } from "@testing-library/react";
 import Feed from "@/components/Feed";
+import Card from "@/components/Card";
 import PromptService from "@/utils/PromptService";
 import mockPostsResponse from "@/utils/TestData";
+import renderWithSession from "@/utils/TestUtil";
+
+jest.mock("next/navigation", () => {
+    const actual = jest.requireActual("next/navigation");
+    return {
+        ...actual,
+        usePathname: jest.fn().mockReturnValue("/")
+    };
+});
+
 
 describe("Feed component tests", () => {
     beforeEach(() => {
         jest.spyOn(PromptService, "getPrompts").mockResolvedValue(mockPostsResponse);
-        render(<Feed />);
+        renderWithSession(<Feed />);
     })
 
     it("Should render the search box", async () => {
@@ -53,5 +64,34 @@ describe("Feed component tests", () => {
             expect(screen.getByText("This is a prompt")).toBeInTheDocument()
             expect(screen.queryByText("First post")).toBeNull()
         })
+    })
+})
+
+describe("Edit and Delete of posts tests in Feed", () => {
+    beforeEach(() => {
+        jest.spyOn(PromptService, "getPrompts").mockResolvedValue(mockPostsResponse);
+    })
+    it(`Should not render edit and delete button when the 
+        path is not profile and post creator is user logged in`, () => {
+        renderWithSession(<Card post={mockPostsResponse[0]} handleTagClick={() => { }} />, {
+            user: {
+                id: "1"
+            }
+        });
+
+        expect(screen.queryByText("Edit")).toBeNull();
+        expect(screen.queryByText("Delete")).toBeNull();
+    })
+
+    it(`Should not render edit and delete button when the 
+        path is not profile and post creator is not user logged in`, () => {
+        renderWithSession(<Card post={mockPostsResponse[0]} handleTagClick={() => { }} />, {
+            user: {
+                id: "3"
+            }
+        });
+
+        expect(screen.queryByText("Edit")).toBeNull();
+        expect(screen.queryByText("Delete")).toBeNull();
     })
 })

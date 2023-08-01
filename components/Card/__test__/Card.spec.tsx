@@ -1,15 +1,24 @@
 import mockPostsResponse from "@/utils/TestData"
-import { fireEvent, render , screen} from "@testing-library/react"
+import renderWithSession from "@/utils/TestUtil"
+import { fireEvent, screen } from "@testing-library/react"
 import Card from ".."
+
+jest.mock("next/navigation", () => {
+    const actual = jest.requireActual("next/navigation");
+    return {
+        ...actual,
+        usePathname: jest.fn().mockReturnValue("/profile")
+    };
+});
 
 describe("Card component tests", () => {
     beforeEach(() => {
         Object.assign(navigator, {
             clipboard: {
-              writeText: jest.fn(),
+                writeText: jest.fn(),
             },
-          });
-        render(<Card post={mockPostsResponse[0]} handleTagClick={() => {}}/>)
+        });
+        renderWithSession(<Card post={mockPostsResponse[0]} handleTagClick={() => { }} />)
     })
 
     it("Should render the card component", () => {
@@ -36,4 +45,93 @@ describe("Card component tests", () => {
         expect(screen.getByAltText("tick_icon")).toBeInTheDocument()
         expect(screen.queryByAltText("copy_icon")).toBeNull()
     })
+})
+
+describe("Edit and Delete button in Card tests", () => {
+    it(`Should render edit and delete button when the 
+        path is profile and post creator is user logged in`, () => {
+        renderWithSession(<Card
+            post={mockPostsResponse[0]}
+            handleEdit={() => { }}
+            handleDelete={() => { }}
+        />, {
+            user: {
+                id: "1"
+            }
+        })
+        const editButton = screen.getByText("Edit")
+        const deleteButton = screen.getByText("Delete")
+
+        expect(editButton).toBeInTheDocument();
+        expect(deleteButton).toBeInTheDocument();
+    })
+
+    it(`Should call respective handlers when edit and
+         delete buttons are clicked`, () => {
+        let isEditCalled = false;
+        let isDeleteCalled = false;
+
+        renderWithSession(<Card
+            post={mockPostsResponse[0]}
+            handleEdit={() => { isEditCalled = true }}
+            handleDelete={() => { isDeleteCalled = true }}
+        />, {
+            user: {
+                id: "1"
+            }
+        })
+        const editButton = screen.getByText("Edit")
+        const deleteButton = screen.getByText("Delete")
+
+        expect(editButton).toBeInTheDocument();
+        expect(deleteButton).toBeInTheDocument();
+
+        fireEvent.click(editButton);
+        expect(isEditCalled).toBeTruthy();
+
+        fireEvent.click(deleteButton)
+        expect(isDeleteCalled).toBeTruthy();
+    })
+
+    it(`Should not perform any action when edit and delete buttons are clicked
+        but there are no handlers`, () => {
+        let isEditCalled = false;
+        let isDeleteCalled = false;
+
+        renderWithSession(<Card
+            post={mockPostsResponse[0]}
+        />, {
+            user: {
+                id: "1"
+            }
+        })
+        const editButton = screen.getByText("Edit")
+        const deleteButton = screen.getByText("Delete")
+
+        expect(editButton).toBeInTheDocument();
+        expect(deleteButton).toBeInTheDocument();
+
+        fireEvent.click(editButton);
+        expect(isEditCalled).toBeFalsy();
+
+        fireEvent.click(deleteButton)
+        expect(isDeleteCalled).toBeFalsy();
+    })
+
+    it(`Should not render edit and delete button when the 
+        path is profile but post creator is not user logged in`, () => {
+        renderWithSession(<Card
+            post={mockPostsResponse[0]}
+            handleEdit={() => { }}
+            handleDelete={() => { }}
+        />, {
+            user: {
+                id: "2"
+            }
+        })
+
+        expect(screen.queryByText("Edit")).toBeNull();
+        expect(screen.queryByText("Delete")).toBeNull();
+    })
+
 })
