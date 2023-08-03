@@ -3,9 +3,16 @@ import { rest } from "msw";
 import UserService from "../UserService";
 
 describe("User service get all posts success test", () => {
+    const successResponse: any = {
+        prompt: "s",
+        tag: "s",
+        _id: "7",
+        creator: {}
+    }
+
     const handlers = [
         rest.get("/api/users/7/posts", async (req, res, ctx) => {
-            return res(ctx.status(200), ctx.json({ prompt: "s", tag: "s", _id:"7", creator: {} }));
+            return res(ctx.status(200), ctx.json(successResponse));
         }),
     ];
     
@@ -20,12 +27,7 @@ describe("User service get all posts success test", () => {
     it("Should return success response when api request succeeds", async () => {
         const response = await UserService.getPostsByUser("7");
 
-        expect(response).toEqual({
-            prompt: "s",
-            tag: "s",
-            _id: "7",
-            creator: {}
-        })
+        expect(response).toEqual(successResponse)
     })
 })
 
