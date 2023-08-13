@@ -80,18 +80,18 @@ const CardView = ({
             </p>
             {user?.id === post.creator._id && pathName === "/profile" && (
                 <div className='mt-5 flex-end gap-4 border-t border-gray-100 pt-3'>
-                    <p
+                    <button
                         className='font-inter text-sm green_gradient cursor-pointer'
                         onClick={handleEdit ? () => handleEdit(post) : () => {}}
                     >
                         Edit
-                    </p>
-                    <p
+                    </button>
+                    <button
                         className='font-inter text-sm orange_gradient cursor-pointer'
                         onClick={handleDelete ? () => handleDelete(post) : () => {}}
                     >
                         Delete
-                    </p>
+                    </button>
                 </div>
             )}
         </div>

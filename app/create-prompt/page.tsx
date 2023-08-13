@@ -1,7 +1,7 @@
 "use client"
 
-import Form, { IPost } from '@/components/Form'
-import PromptService from '@/utils/PromptService'
+import Form from '@/components/Form'
+import PromptService, { Post } from '@/utils/PromptService'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useState } from 'react'
@@ -16,11 +16,17 @@ const CreatePrompt = () => {
   const router = useRouter();
   const { data: session }: any = useSession();
   const [submitting, setSubmitting] = useState(false);
-  const [post, setPost]: [IPost, Dispatch<SetStateAction<IPost>>] = useState({
+  const [post, setPost]: [Post, Dispatch<SetStateAction<Post>>] = useState({
     prompt: "",
     tag: "",
-    img: ""
-  })
+    creator: {
+        username: "",
+        email: "",
+        image: "",
+        _id: ""
+    },
+    _id: ""
+})
 
   const createPrompt = async (e: MouseEvent) => {
     e.preventDefault();
