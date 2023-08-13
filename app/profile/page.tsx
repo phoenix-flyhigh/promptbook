@@ -7,9 +7,11 @@ import Profile from "@/components/Profile";
 import { Post } from "@/utils/PromptService";
 import UserService from "@/utils/UserService";
 import { UseStateType } from "@/components/Feed/Feed.view";
+import { useRouter } from "next/navigation";
 
 const MyProfile = () => {
   const { data: session }: any = useSession();
+  const router : any = useRouter();
   const [myPosts, setMyPosts]: UseStateType<Post[]> = useState([] as Post[]);
 
   useEffect(() => {
@@ -21,7 +23,9 @@ const MyProfile = () => {
     if (session?.user.id) fetchPosts();
   }, [session?.user.id]);
 
-  const handleEdit = (post: Post) => {  };
+  const handleEdit = (post: Post) => { 
+      router.push(`/update-prompt?id=${post._id}`)
+   };
 
   const handleDelete = async (post: Post) => {  };
 

@@ -46,7 +46,7 @@ const PromptService: IPromptService = {
         tag: string
     }) => {
         const response = await axios.patch(`/api/prompt/${id}`,
-            JSON.stringify(post),
+            post,
         )
         return response.data
     },

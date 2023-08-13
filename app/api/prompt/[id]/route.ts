@@ -28,11 +28,11 @@ export const PATCH = async (
     { params }: {
         params: { id: string }
     }) => {
-    const { prompt, tag } = req.json();
+    const { prompt, tag } = await req.json();
     try {
         await connectToDB();
 
-        const existingPrompt = await Prompt.findById(params.id).populate('creator')
+        const existingPrompt = await Prompt.findById(params.id).populate("creator")
 
         if (!existingPrompt)
             return new Response("Prompt not found", {
@@ -42,7 +42,8 @@ export const PATCH = async (
         existingPrompt.prompt = prompt;
         existingPrompt.tag = tag;
 
-        existingPrompt.save();
+        await existingPrompt.save();
+        
         return new Response(JSON.stringify(existingPrompt), {
             status: 200
         })
