@@ -1,13 +1,16 @@
-import { render, RenderResult } from "@testing-library/react"
-import { SessionProvider, SessionProviderProps } from 'next-auth/react'
-import { Provider } from "react"
+import { render } from "@testing-library/react"
+import { SessionProvider } from 'next-auth/react'
 
 const renderWithSession: (ui: any, session?: any) => any = (
     ui,
     session
 ) => {
     return render(
-        <SessionProvider session={session ?? null}>
+        <SessionProvider session={session === undefined ? {
+            user: {
+                id: "7"
+            }
+        }: session}>
             {ui}
         </SessionProvider>
     )

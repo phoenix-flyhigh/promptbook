@@ -2,6 +2,7 @@
 
 import Form from '@/components/Form'
 import PromptService, { Post } from '@/utils/PromptService'
+import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
@@ -11,6 +12,7 @@ export interface UpdatePromptRequest {
 }
 
 const EditPrompt = () => {
+    const { data: session, status }: any = useSession();
     const router = useRouter();
     const [submitting, setSubmitting] = useState(false);
     const [post, setPost]: [Post, Dispatch<SetStateAction<Post>>] = useState({
@@ -38,20 +40,27 @@ const EditPrompt = () => {
                 console.log(error);
             }
         }
-        if (promptId)
+        if (promptId && session?.user.id)
             getPromptDetails()
     }, [promptId])
 
+    if (status === "loading") {
+        return <p>Loading...</p>
+    }
+
+    if (status === "unauthenticated") {
+        return <p>Access Denied</p>
+    }
+
+    if(!promptId){
+        return <p>Invalid Url. Please enter a valid prompt id</p>
+    }
+
     const updatePrompt = async (e: MouseEvent) => {
-        console.log("clicked edit");
-        
         e.preventDefault();
         setSubmitting(true);
 
         try {
-            console.log("entered try");
-            console.log(post.prompt);
-            
             await PromptService.updatePrompt(post._id, {
                 prompt: post.prompt,
                 tag: post.tag,

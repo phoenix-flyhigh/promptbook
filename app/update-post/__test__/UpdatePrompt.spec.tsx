@@ -1,6 +1,7 @@
 import PromptService from "@/utils/PromptService";
 import mockPostsResponse from "@/utils/TestData";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react"
+import renderWithSession from "@/utils/TestUtil";
+import { fireEvent, screen, waitFor } from "@testing-library/react"
 import EditPrompt from "../page"
 
 const routerSpy = jest.fn()
@@ -27,7 +28,11 @@ describe("Edit post page tests", () => {
                 prompt: "New post"
             })
         jest.spyOn(PromptService, "getPrompt").mockResolvedValue(mockPostsResponse[0])
-        render(<EditPrompt />)
+        renderWithSession(<EditPrompt />)
+    })
+
+    afterEach(() => {
+        jest.clearAllMocks();
     })
 
     it("Should render the form with existing post data", async () => {
@@ -56,5 +61,14 @@ describe("Edit post page tests", () => {
             expect(updateServiceSpy).toHaveBeenCalled();
             expect(routerSpy).toHaveBeenCalled();
         })
+    })
+})
+
+describe("Update prompt page tests for not logged in users", () => {
+    it("Should not render form show with appropriate error message", () => {
+        renderWithSession(<EditPrompt/>, null)
+
+        expect(screen.getByText("Access Denied")).toBeInTheDocument()
+        expect(screen.queryByText("Your AI Prompt")).not.toBeInTheDocument()
     })
 })

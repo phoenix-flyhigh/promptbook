@@ -14,19 +14,27 @@ export interface CreatePromptRequest {
 
 const CreatePrompt = () => {
   const router = useRouter();
-  const { data: session }: any = useSession();
+  const { data: session, status }: any = useSession();
   const [submitting, setSubmitting] = useState(false);
   const [post, setPost]: [Post, Dispatch<SetStateAction<Post>>] = useState({
     prompt: "",
     tag: "",
     creator: {
-        username: "",
-        email: "",
-        image: "",
-        _id: ""
+      username: "",
+      email: "",
+      image: "",
+      _id: ""
     },
     _id: ""
-})
+  })
+
+  if (status === "loading") {
+    return <p>Loading...</p>
+  }
+
+  if (status === "unauthenticated") {
+    return <p>Access Denied</p>
+  }
 
   const createPrompt = async (e: MouseEvent) => {
     e.preventDefault();

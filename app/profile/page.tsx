@@ -10,7 +10,7 @@ import { UseStateType } from "@/components/Feed/Feed.view";
 import { useRouter } from "next/navigation";
 
 const MyProfile = () => {
-  const { data: session }: any = useSession();
+  const { data: session, status }: any = useSession();
   const router : any = useRouter();
   const [posts, setPosts]: UseStateType<Post[]> = useState([] as Post[]);
 
@@ -22,6 +22,14 @@ const MyProfile = () => {
 
     if (session?.user.id) fetchPosts();
   }, [session?.user.id]);
+
+  if (status === "loading") {
+    return <p>Loading...</p>
+  }
+
+  if (status === "unauthenticated") {
+    return <p>Access Denied</p>
+  }
 
   const handleEdit = (post: Post) => { 
       router.push(`/update-post?id=${post._id}`)

@@ -52,8 +52,17 @@ describe("Create post page tests", () => {
 
         expect(postSpy).toHaveBeenCalledWith({
             prompt: "s",
-            userId: undefined,
+            userId: "7",
             tag: "s"
         })
+    })
+})
+
+describe("Create prompt page tests for not logged in users", () => {
+    it("Should not render form and show appropriate error message", () => {
+        renderWithSession(<CreatePrompt />, null)
+
+        expect(screen.getByText("Access Denied")).toBeInTheDocument()
+        expect(screen.queryByText("Your AI Prompt")).not.toBeInTheDocument()
     })
 })
