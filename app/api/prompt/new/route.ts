@@ -1,5 +1,6 @@
 import Prompt from "@/models/prompt";
 import { connectToDB } from "@/utils/database";
+import { getServerSession } from "next-auth";
 
 interface CreatePostRequestProps {
     prompt: string,
@@ -8,6 +9,13 @@ interface CreatePostRequestProps {
 }
 
 export const POST = async (req: any) => {
+    const session = await getServerSession();
+    
+    if (!session)
+        return new Response("Access denied", {
+            status: 401
+        })
+        
     const { prompt, userId, tag }: CreatePostRequestProps = await req.json();
 
     try {

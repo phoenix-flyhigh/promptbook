@@ -1,9 +1,17 @@
 import Prompt from "@/models/prompt";
 import { connectToDB } from "@/utils/database"
+import { getServerSession } from "next-auth/next";
 
 export const GET = async (req: any, { params }: {
     params: { id: string }
 }) => {
+    const session = await getServerSession();
+
+    if (!session)
+        return new Response("Access denied", {
+            status: 401
+        })
+
     try {
         await connectToDB();
         const prompt = await Prompt.findById(params.id).populate('creator');
@@ -28,6 +36,13 @@ export const PATCH = async (
     { params }: {
         params: { id: string }
     }) => {
+    const session = await getServerSession();
+
+    if (!session)
+        return new Response("Access denied", {
+            status: 401
+        })
+
     const { prompt, tag } = await req.json();
     try {
         await connectToDB();
@@ -43,7 +58,7 @@ export const PATCH = async (
         existingPrompt.tag = tag;
 
         await existingPrompt.save();
-        
+
         return new Response(JSON.stringify(existingPrompt), {
             status: 200
         })
@@ -57,6 +72,12 @@ export const PATCH = async (
 export const DELETE = async (req: any, { params }: {
     params: { id: string }
 }) => {
+    const session = await getServerSession();
+
+    if (!session)
+        return new Response("Access denied", {
+            status: 401
+        })
     try {
         await connectToDB();
 
