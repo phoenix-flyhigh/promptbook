@@ -13,11 +13,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  
   return (
     <html lang="en">
-      <body className={""}>
+      <body>
         <Provider>
-        <div className="main">
+        <div className="main bg-blue-200 dark:bg-primary-blue">
           <div className="gradient" />
         </div>
         <main className="app">

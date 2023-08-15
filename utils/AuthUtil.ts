@@ -2,12 +2,14 @@
 
 import { useSession } from "next-auth/react";
 
-export type UserDetailsFromSession =  {
+export type UserDetailsFromSession =  UserDetails | undefined;
+
+export type UserDetails = {
     name?: string | null | undefined;
     email?: string | null | undefined;
     image?: string | null | undefined;
     id?: string | null | undefined;
-} | undefined;
+}
 
 interface IAuthUtil {
     getUserFromSession: () => UserDetailsFromSession;

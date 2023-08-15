@@ -39,11 +39,13 @@ describe("NavBar component tests for signedIn users", () => {
         const createPromptOption: HTMLElement[] = screen.getAllByText("Create Post");
         const signOutOption: HTMLElement[] = screen.getAllByText("Sign Out");
         const myProfileOption: HTMLElement = screen.getByText("My Profile");
+        const themeButton: HTMLElement[] = screen.getAllByText("Switch to Dark Theme");
 
         expect(dropdown).toBeInTheDocument();
         expect(createPromptOption.length).toBe(2);
         expect(signOutOption.length).toBe(2);
         expect(myProfileOption).toBeInTheDocument();
+        expect(themeButton.length).toBe(2);
     })
 
     it("Should render the the menu items in the nav bar for desktop", () => {
@@ -60,8 +62,26 @@ describe("NavBar component tests for signedIn users", () => {
 
         const createPromptOption: HTMLElement = screen.getByText("Create Post");
         const signOutOption: HTMLElement = screen.getByText("Sign Out");
+        const themeButton: HTMLElement = screen.getByText("Switch to Dark Theme");
 
         expect(createPromptOption).toBeInTheDocument();
         expect(signOutOption).toBeInTheDocument();
+        expect(themeButton).toBeInTheDocument();
+    })
+
+    it("Should change theme button title on changing thene", () => {
+        renderWithSession(<NavBar />, {
+            expires: "",
+            user: {
+                name: "s",
+                image: "/logo.png"
+            }
+        });
+        const themeButton: HTMLElement = screen.getByText("Switch to Dark Theme");
+
+        fireEvent.click(themeButton)
+
+        expect(screen.getByText("Switch to Light Theme")).toBeInTheDocument();
+        expect(screen.queryByText("Switch to Dark Theme")).not.toBeInTheDocument();
     })
 })

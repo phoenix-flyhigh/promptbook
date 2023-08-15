@@ -3,9 +3,9 @@
 import Image from "next/image"
 import Link from "next/link"
 import { signOut } from "next-auth/react";
-import { useState } from "react";
-import { UserDetailsFromSession } from "@/utils/AuthUtil";
+import { useEffect, useState } from "react";
 import SignInSetup from "./SignInSetup";
+import { UserDetailsFromSession } from "@/utils/AuthUtil";
 
 interface NavBarViewProps {
     isUserLoggedIn: UserDetailsFromSession
@@ -15,6 +15,18 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
     isUserLoggedIn
 }: NavBarViewProps) => {
     const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
+    const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+    const root = document.documentElement;
+
+    useEffect(() => {
+        setIsDarkTheme(root.classList.contains('dark'))
+    }, [])
+
+    const handleToggleTheme = () => {
+        setIsDarkTheme(prev => !prev)
+        root.classList.toggle('dark')
+    }
 
     return (
         <nav className="flex-between w-full mb-16 pt-3">
@@ -38,6 +50,15 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                                     </Link>
                                     <button type="button" onClick={() => signOut()} className="outline_btn">
                                         Sign Out
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            handleToggleTheme()
+                                            setToggleProfileMenu(false)
+                                        }}
+                                        className="outline_btn">
+                                        {`Switch to ${isDarkTheme ? "Light" : "Dark"} Theme`}
                                     </button>
                                     <Link href="/profile">
                                         <Image
@@ -79,6 +100,14 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                                                 >
                                                     Create Post
                                                 </Link>
+                                                <p className="dropdown_link">
+                                                    <span onClick={() => {
+                                                        handleToggleTheme()
+                                                        setToggleProfileMenu(false)
+                                                    }}>
+                                                        {`Switch to ${isDarkTheme ? "Light" : "Dark"} Theme`}
+                                                    </span>
+                                                </p>
                                                 <button
                                                     type="button"
                                                     className="mt-5 w-full black_btn"
@@ -90,13 +119,11 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                                                     Sign Out
                                                 </button>
                                             </div>
-                                        )
-                                    }
+                                        )}
                                 </div>
                             </div>
                         </>
-                    ) :
-                    <SignInSetup />
+                    ) : <SignInSetup />
             }
         </nav>
     )
