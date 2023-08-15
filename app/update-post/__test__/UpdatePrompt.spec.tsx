@@ -64,9 +64,42 @@ describe("Edit post page tests", () => {
     })
 })
 
+describe("Failed api call tests for update page", () => {
+    it(`Should render toast when update post api call fails
+        and close toast on clicking close btn`, async () => {
+        const toastMessage = "Failed to update post. Please try again later"
+        const updateServiceSpy = jest.spyOn(PromptService, "updatePrompt")
+            .mockRejectedValue(new Error("internal error"))
+        jest.spyOn(PromptService, "getPrompt").mockResolvedValue(mockPostsResponse[0])
+        renderWithSession(<EditPrompt />)
+        const editButton = screen.getByRole("button", {
+            name: "Edit"
+        })
+        await waitFor(() => {
+            const prompt = screen.getByTestId("tid-prompt-input")
+            expect(prompt).toBeInTheDocument();
+        })
+
+        fireEvent.click(editButton)
+
+        await waitFor(() => {
+            expect(updateServiceSpy).toHaveBeenCalled();
+
+            const toast = screen.getByText(toastMessage)
+            expect(toast).toBeInTheDocument()
+        })
+
+        const closeButton = screen.getByTestId("tid-toast-close-btn")
+        fireEvent.click(closeButton)
+
+        expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+        expect(screen.queryByText(toastMessage)).not.toBeInTheDocument()
+    })
+})
+
 describe("Update prompt page tests for not logged in users", () => {
     it("Should not render form show with appropriate error message", () => {
-        renderWithSession(<EditPrompt/>, null)
+        renderWithSession(<EditPrompt />, null)
 
         expect(screen.getByText("Access Denied")).toBeInTheDocument()
         expect(screen.queryByText("Your AI Prompt")).not.toBeInTheDocument()

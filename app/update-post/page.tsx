@@ -1,6 +1,7 @@
 "use client"
 
 import Form from '@/components/Form'
+import Toast from '@/components/Toast'
 import PromptService, { Post } from '@/utils/PromptService'
 import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -15,6 +16,7 @@ const EditPrompt = () => {
     const { data: session, status }: any = useSession();
     const router = useRouter();
     const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState(false);
     const [post, setPost]: [Post, Dispatch<SetStateAction<Post>>] = useState({
         prompt: "",
         tag: "",
@@ -52,11 +54,12 @@ const EditPrompt = () => {
         return <p>Access Denied</p>
     }
 
-    if(!promptId){
+    if (!promptId) {
         return <p>Invalid Url. Please enter a valid prompt id</p>
     }
 
     const updatePrompt = async (e: MouseEvent) => {
+        setError(false)
         e.preventDefault();
         setSubmitting(true);
 
@@ -68,7 +71,7 @@ const EditPrompt = () => {
             router.push("/profile");
         }
         catch (error) {
-            console.log(error);
+            setError(true)
         }
         finally {
             setSubmitting(false);
@@ -76,13 +79,20 @@ const EditPrompt = () => {
     }
 
     return (
-        <Form
-            type="Edit"
-            post={post}
-            setPost={setPost}
-            submitting={submitting}
-            handleSubmit={updatePrompt}
-        />
+        <>
+            <Toast
+                message="Failed to update post. Please try again later"
+                showToast={error}
+                onClose={() => setError(false)}
+            />
+            <Form
+                type="Edit"
+                post={post}
+                setPost={setPost}
+                submitting={submitting}
+                handleSubmit={updatePrompt}
+            />
+        </>
     )
 }
 
