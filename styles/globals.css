@@ -168,3 +168,11 @@
 .flex-between {
   @apply flex justify-between items-center;
 }
+
+.overlap_parent {
+  @apply grid grid-cols-1
+}
+
+.overlap_child {
+  @apply row-start-1 col-start-1
+}
