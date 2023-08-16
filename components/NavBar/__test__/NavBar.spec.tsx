@@ -18,6 +18,11 @@ Object.defineProperty(window, 'matchMedia', {
     })),
 });
 
+const openProfileMenu = () => {
+    const profileIcon: HTMLImageElement = screen.getByTestId("tid-profile-icon-mobile");
+    fireEvent.click(profileIcon);
+}
+
 describe("NavBar component tests", () => {
     it("Should render the app logo", () => {
         renderWithSession(<NavBar />, {
@@ -34,8 +39,6 @@ describe("NavBar component tests", () => {
 
 describe("NavBar component tests for signedIn users", () => {
     it("Should render the the menu items in a dropdown for mobile", () => {
-        jest.spyOn(window.screen, "width", "get").mockReturnValue(200);
-
         renderWithSession(<NavBar />, {
             expires: "",
             user: {
@@ -43,47 +46,22 @@ describe("NavBar component tests for signedIn users", () => {
                 image: "/logo.png"
             }
         })
-        const profileIcon: HTMLImageElement = screen.getByTestId("tid-profile-icon-mobile");
-
-        expect(profileIcon).toBeInTheDocument();
-
-        fireEvent.click(profileIcon);
+        openProfileMenu()
 
         const dropdown: HTMLElement = screen.getByTestId("tid-nav-dropdown");
-        const createPromptOption: HTMLElement[] = screen.getAllByText("Create Post");
-        const signOutOption: HTMLElement[] = screen.getAllByText("Sign Out");
+        const createPromptOption: HTMLElement = screen.getByText("Create Post");
+        const signOutOption: HTMLElement = screen.getByText("Sign Out");
         const myProfileOption: HTMLElement = screen.getByText("My Profile");
         const themeButton: HTMLElement = screen.getByText("Switch to Dark Theme");
 
         expect(dropdown).toBeInTheDocument();
-        expect(createPromptOption.length).toBe(2);
-        expect(signOutOption.length).toBe(2);
+        expect(createPromptOption).toBeInTheDocument();
+        expect(signOutOption).toBeInTheDocument();
         expect(myProfileOption).toBeInTheDocument();
         expect(themeButton).toBeInTheDocument();
     })
 
-    it("Should render the the menu items in the nav bar for desktop", () => {
-        renderWithSession(<NavBar />, {
-            expires: "",
-            user: {
-                name: "s",
-                image: "/logo.png"
-            }
-        });
-        const profileIcon: HTMLImageElement = screen.getByTestId("tid-profile-icon-desktop");
-
-        expect(profileIcon).toBeInTheDocument();
-
-        const createPromptOption: HTMLElement = screen.getByText("Create Post");
-        const signOutOption: HTMLElement = screen.getByText("Sign Out");
-
-        expect(createPromptOption).toBeInTheDocument();
-        expect(signOutOption).toBeInTheDocument();
-    })
-
     it("Should change theme button title on changing theme from light to dark", async () => {
-        jest.spyOn(window.screen, "width", "get").mockReturnValue(200);
-
         renderWithSession(
             <ThemeProvider attribute="class">
                 <NavBar />
@@ -95,19 +73,16 @@ describe("NavBar component tests for signedIn users", () => {
                     image: "/logo.png"
                 }
             });
-        const profileIcon: HTMLImageElement = screen.getByTestId("tid-profile-icon-mobile");
-        fireEvent.click(profileIcon);
+        openProfileMenu()
         const themeButton: HTMLElement = screen.getByText("Switch to Dark Theme");
         fireEvent.click(themeButton)
-        fireEvent.click(profileIcon);
-
+        openProfileMenu()
+        
         expect(screen.getByText("Switch to Light Theme")).toBeInTheDocument();
         expect(screen.queryByText("Switch to Dark Theme")).not.toBeInTheDocument();
     })
 
     it("Should change theme button title on changing theme from dark to light", async () => {
-        jest.spyOn(window.screen, "width", "get").mockReturnValue(200);
-
         renderWithSession(
             <ThemeProvider attribute="class" forcedTheme="dark">
                 <NavBar />
@@ -119,11 +94,10 @@ describe("NavBar component tests for signedIn users", () => {
                     image: "/logo.png"
                 }
             });
-        const profileIcon: HTMLImageElement = screen.getByTestId("tid-profile-icon-mobile");
-        fireEvent.click(profileIcon);
+        openProfileMenu()
         const themeButton: HTMLElement = screen.getByText("Switch to Light Theme");
         fireEvent.click(themeButton)
-        fireEvent.click(profileIcon);
+        openProfileMenu()
 
         expect(screen.getByText("Switch to Dark Theme")).toBeInTheDocument();
         expect(screen.queryByText("Switch to Light Theme")).not.toBeInTheDocument();
