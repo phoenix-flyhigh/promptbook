@@ -27,7 +27,7 @@ const Provider: (props: ProviderProps) => JSX.Element = ({ children, session }: 
 
     return (
         <SessionProvider session={session}>
-            <ThemeProvider attribute="class">
+            <ThemeProvider attribute="class" enableSystem={false}>
                 {children}
             </ThemeProvider>
         </SessionProvider>

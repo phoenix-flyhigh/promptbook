@@ -44,7 +44,7 @@ const EditPrompt = () => {
         }
         if (promptId && session?.user.id)
             getPromptDetails()
-    }, [promptId])
+    }, [promptId, session?.user.id])
 
     if (status === "loading") {
         return <p>Loading...</p>

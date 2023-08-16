@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Provider>
-        <div className="main bg-blue-200 dark:bg-primary-blue">
+        <div className="main bg-blue-200 dark:bg-dark-background ">
           <div className="gradient" />
         </div>
         <main className="app">
