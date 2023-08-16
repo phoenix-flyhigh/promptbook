@@ -17,6 +17,8 @@ const EditPrompt = () => {
     const router = useRouter();
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     const [post, setPost]: [Post, Dispatch<SetStateAction<Post>>] = useState({
         prompt: "",
         tag: "",
@@ -31,20 +33,27 @@ const EditPrompt = () => {
     const searchParams = useSearchParams();
     const promptId = searchParams.get("id");
 
-    useEffect(() => {
-        const getPromptDetails = async () => {
-            try {
-                if (promptId) {
-                    const post = await PromptService.getPrompt(promptId)
-                    setPost(post)
-                }
-            } catch (error) {
-                console.log(error);
+    const getPromptDetails = async () => {
+        setIsLoading(true)
+        setLoadError(false)
+        try {
+            if (promptId) {
+                const post = await PromptService.getPrompt(promptId)
+                setPost(post)
             }
+        } catch (error) {
+            setLoadError(true)
+        } finally {
+            setIsLoading(false)
         }
+    }
+    useEffect(() => {
         if (promptId && session?.user.id)
             getPromptDetails()
     }, [promptId, session?.user.id])
+    if (!promptId) {
+        return <p>Invalid Url. Please enter a valid prompt id</p>
+    }
 
     if (status === "loading") {
         return <p>Loading...</p>
@@ -54,8 +63,18 @@ const EditPrompt = () => {
         return <p>Access Denied</p>
     }
 
-    if (!promptId) {
-        return <p>Invalid Url. Please enter a valid prompt id</p>
+    if(isLoading) {
+        return <p>Loading...</p>
+    }
+
+    if (loadError) {
+        return (
+            <p>
+                Failed to load post
+                <br />
+                <button onClick={() => getPromptDetails()}>Try again</button>
+            </p>
+        )
     }
 
     const updatePrompt = async (e: MouseEvent) => {
@@ -85,13 +104,15 @@ const EditPrompt = () => {
                 showToast={error}
                 onClose={() => setError(false)}
             />
-            <Form
-                type="Edit"
-                post={post}
-                setPost={setPost}
-                submitting={submitting}
-                handleSubmit={updatePrompt}
-            />
+            {!isLoading && !loadError &&
+                <Form
+                    type="Edit"
+                    post={post}
+                    setPost={setPost}
+                    submitting={submitting}
+                    handleSubmit={updatePrompt}
+                />
+            }
         </>
     )
 }

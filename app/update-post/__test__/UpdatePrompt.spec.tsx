@@ -1,7 +1,7 @@
 import PromptService from "@/utils/PromptService";
 import mockPostsResponse from "@/utils/TestData";
 import renderWithSession from "@/utils/TestUtil";
-import { fireEvent, screen, waitFor } from "@testing-library/react"
+import { fireEvent, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react"
 import EditPrompt from "../page"
 
 const routerSpy = jest.fn()
@@ -21,7 +21,7 @@ jest.mock("next/navigation", () => {
 
 describe("Edit post page tests", () => {
     let updateServiceSpy: jest.SpyInstance;
-    beforeEach(() => {
+    beforeEach(async () => {
         updateServiceSpy = jest.spyOn(PromptService, "updatePrompt")
             .mockResolvedValue({
                 ...mockPostsResponse[0],
@@ -29,6 +29,7 @@ describe("Edit post page tests", () => {
             })
         jest.spyOn(PromptService, "getPrompt").mockResolvedValue(mockPostsResponse[0])
         renderWithSession(<EditPrompt />)
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
     })
 
     afterEach(() => {
@@ -37,14 +38,10 @@ describe("Edit post page tests", () => {
 
     it("Should render the form with existing post data", async () => {
         expect(screen.getByText("Edit Post")).toBeInTheDocument();
-
-        await waitFor(() => {
-            const prompt = screen.getByText("This is a prompt")
-            expect(prompt).toBeInTheDocument();
-        })
-
+        const prompt = screen.getByText("This is a prompt")
         const tag = screen.getByDisplayValue("software")
 
+        expect(prompt).toBeInTheDocument();
         expect(tag).toBeInTheDocument();
     })
 
@@ -52,12 +49,12 @@ describe("Edit post page tests", () => {
         const editButton = screen.getByRole("button", {
             name: "Edit"
         })
-        expect(editButton).toBeInTheDocument()
-        await waitFor(() => {
-            const prompt = screen.getByTestId("tid-prompt-input")
-            expect(prompt).toBeInTheDocument();
-            fireEvent.click(editButton)
+        const prompt = screen.getByTestId("tid-prompt-input")
+        expect(prompt).toBeInTheDocument();
 
+        fireEvent.click(editButton)
+
+        await waitFor(() => {
             expect(updateServiceSpy).toHaveBeenCalled();
             expect(routerSpy).toHaveBeenCalled();
         })
@@ -65,20 +62,25 @@ describe("Edit post page tests", () => {
 })
 
 describe("Failed api call tests for update page", () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+
     it(`Should render toast when update post api call fails
         and close toast on clicking close btn`, async () => {
         const toastMessage = "Failed to update post. Please try again later"
         const updateServiceSpy = jest.spyOn(PromptService, "updatePrompt")
             .mockRejectedValue(new Error("internal error"))
         jest.spyOn(PromptService, "getPrompt").mockResolvedValue(mockPostsResponse[0])
+
         renderWithSession(<EditPrompt />)
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+
         const editButton = screen.getByRole("button", {
             name: "Edit"
         })
-        await waitFor(() => {
-            const prompt = screen.getByTestId("tid-prompt-input")
-            expect(prompt).toBeInTheDocument();
-        })
+        const prompt = screen.getByTestId("tid-prompt-input")
+        expect(prompt).toBeInTheDocument();
 
         fireEvent.click(editButton)
 
@@ -94,6 +96,28 @@ describe("Failed api call tests for update page", () => {
 
         expect(screen.queryByRole("alert")).not.toBeInTheDocument()
         expect(screen.queryByText(toastMessage)).not.toBeInTheDocument()
+    })
+
+    it("Should render loading text until get api call finishes", () => {
+        jest.spyOn(PromptService, "getPrompt").mockResolvedValue(mockPostsResponse[0])
+
+        renderWithSession(<EditPrompt />)
+
+        expect(screen.getByText("Loading...")).toBeInTheDocument()
+    })
+
+    it("Should render error message and try again button on get api failure", async () => {
+        const serviceSpy = jest.spyOn(PromptService, "getPrompt").mockRejectedValue(new Error("error"))
+
+        renderWithSession(<EditPrompt />)
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+        expect(screen.getByText("Failed to load post")).toBeInTheDocument()
+        expect(serviceSpy).toHaveBeenCalledTimes(1)
+        
+        const tryAgainButton = screen.getByRole("button", {name: "Try again"})
+        fireEvent.click(tryAgainButton)
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+        expect(serviceSpy).toHaveBeenCalledTimes(2)
     })
 })
 
