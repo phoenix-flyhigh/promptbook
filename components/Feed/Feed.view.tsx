@@ -6,6 +6,10 @@ import Card from "../Card";
 
 export type UseStateType<T> = [T, Dispatch<SetStateAction<T>>]
 
+interface FeedViewProps {
+  posts: Post[]
+}
+
 const CardList = ({ data, handleTagClick }: {
   data: Post[],
   handleTagClick: (tagName: string) => void
@@ -23,25 +27,15 @@ const CardList = ({ data, handleTagClick }: {
   );
 };
 
-const FeedView = () => {
-  const [allPosts, setAllPosts]: UseStateType<Post[]> = useState([] as Post[]);
+const FeedView = ({posts}: FeedViewProps) => {
   const [searchText, setSearchText] = useState("");
   const [searchTimeout, setSearchTimeout]: any = useState(undefined);
   const [searchedResults, setSearchedResults]: UseStateType<Post[]> = useState([] as Post[]);
 
-  const fetchPosts = async () => {
-    const response = await PromptService.getPrompts();
-    setAllPosts(response);
-  };
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
   const filterPrompts = (searchtext: string) => {
     const regex = new RegExp(searchtext, "i");
 
-    return allPosts.filter(
+    return posts.filter(
       (item) =>
         regex.test(item.creator.username) ||
         regex.test(item.tag) ||
@@ -89,7 +83,7 @@ const FeedView = () => {
           handleTagClick={handleTagClick}
         />
       ) : (
-        <CardList data={allPosts} handleTagClick={handleTagClick} />
+        <CardList data={posts} handleTagClick={handleTagClick} />
       )}
     </section>
   );
