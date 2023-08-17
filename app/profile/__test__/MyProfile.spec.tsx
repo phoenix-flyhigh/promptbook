@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react"
+import { fireEvent, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react"
 import mockPostsResponse from "@/utils/TestData"
 import renderWithSession from "@/utils/TestUtil"
 import UserService from "@/utils/UserService"
@@ -19,7 +19,7 @@ jest.mock("next/navigation", () => {
 });
 
 describe("My profile page tests", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         jest.spyOn(PromptService, "deletePrompt").mockResolvedValue("Successfully deleted")
         jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([mockPostsResponse[1]])
         renderWithSession(<MyProfile />, {
@@ -27,36 +27,30 @@ describe("My profile page tests", () => {
                 id: "23"
             }
         })
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
     })
 
     afterEach(() => {
         jest.clearAllMocks()
     })
 
-    it("Should render the feed for user profile", async () => {
+    it("Should render the feed for user profile", () => {
         expect(screen.getByText("My Profile")).toBeInTheDocument();
-        await waitFor(() => {
-            expect(screen.getByText("First post")).toBeInTheDocument();
-        })
+        expect(screen.getByText("First post")).toBeInTheDocument();
     })
 
-    it("Should redirect on clicking edit button", async () => {
-        await waitFor(() => {
-            const editButton = screen.getByText("Edit")
-            expect(editButton).toBeInTheDocument();
+    it("Should redirect on clicking edit button", () => {
+        const editButton = screen.getByText("Edit")
+        expect(editButton).toBeInTheDocument();
 
-            fireEvent.click(editButton);
-            expect(routerSpy).toHaveBeenCalled()
-        })
+        fireEvent.click(editButton);
+
+        expect(routerSpy).toHaveBeenCalled()
     })
 
     it("Should delete post on clicking delete button", async () => {
-        expect(screen.getByText("My Profile")).toBeInTheDocument();
-
-        await waitFor(() => {
-            const postToBeDeleted = screen.getByText("First post")
-            expect(postToBeDeleted).toBeInTheDocument()
-        })
+        const postToBeDeleted = screen.getByText("First post")
+        expect(postToBeDeleted).toBeInTheDocument()
         const editButton = screen.getByRole("button", { name: "Delete" })
 
         expect(editButton).toBeInTheDocument();
@@ -71,9 +65,45 @@ describe("My profile page tests", () => {
 
 describe("My profile page tests for not logged in users", () => {
     it("Should not render page data and show appropriate error message", () => {
-        renderWithSession(<MyProfile/>, null)
+        renderWithSession(<MyProfile />, null)
 
         expect(screen.getByText("Access Denied")).toBeInTheDocument()
         expect(screen.queryByText("My Profile")).not.toBeInTheDocument()
+    })
+})
+
+describe("Fetch posts for user profile page tests", () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+
+    it("Should render loading text until fetch posts api call completes", () => {
+        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([mockPostsResponse[1]])
+        renderWithSession(<MyProfile />, {
+            user: {
+                id: "23"
+            }
+        })
+
+        expect(screen.getByText("Loading...")).toBeInTheDocument();
+    })
+
+    it("Should render loading text until fetch posts api call completes",async () => {
+        const serviceSpy = jest.spyOn(UserService, "getPostsByUser").mockRejectedValue(new Error("error"))
+        renderWithSession(<MyProfile />, {
+            user: {
+                id: "23"
+            }
+        })
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+        
+        expect(screen.getByText("Failed to load posts")).toBeInTheDocument();
+        expect(serviceSpy).toHaveBeenCalledTimes(1)
+        
+        const tryAgainButton = screen.getByRole("button", {name: "Try again"})
+        fireEvent.click(tryAgainButton)
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+
+        expect(serviceSpy).toHaveBeenCalledTimes(2)
     })
 })

@@ -2,7 +2,6 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-
 import Profile from "@/components/Profile";
 import PromptService, { Post } from "@/utils/PromptService";
 import UserService from "@/utils/UserService";
@@ -11,15 +10,27 @@ import { useRouter } from "next/navigation";
 
 const MyProfile = () => {
   const { data: session, status }: any = useSession();
-  const router : any = useRouter();
+  const router: any = useRouter();
   const [posts, setPosts]: UseStateType<Post[]> = useState([] as Post[]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [fetchPostsError, setFetchPostsError] = useState<boolean>(false);
+
+  const fetchPosts = async () => {
+    setIsLoading(true)
+    await UserService.getPostsByUser(session?.user.id)
+      .then((response) => {
+        setPosts(response)
+        setFetchPostsError(false)
+      })
+      .catch((e) => {
+        setFetchPostsError(true)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await UserService.getPostsByUser(session?.user.id);
-      setPosts(response);
-    };
-
     if (session?.user.id) fetchPosts();
   }, [session?.user.id]);
 
@@ -31,11 +42,25 @@ const MyProfile = () => {
     return <p>Access Denied</p>
   }
 
-  const handleEdit = (post: Post) => { 
-      router.push(`/update-post?id=${post._id}`)
-   };
+  if (isLoading) {
+    return <p>Loading...</p>
+  }
 
-  const handleDelete = async (post: Post) => { 
+  if (fetchPostsError) {
+    return (
+      <p>
+        Failed to load posts
+        <br />
+        <button onClick={() => fetchPosts()}>Try again</button>
+      </p>
+    )
+  }
+
+  const handleEdit = (post: Post) => {
+    router.push(`/update-post?id=${post._id}`)
+  };
+
+  const handleDelete = async (post: Post) => {
     try {
       await PromptService.deletePrompt(post._id)
       const myPosts = posts.filter(p => p._id !== post._id)
@@ -43,12 +68,13 @@ const MyProfile = () => {
     } catch (error) {
       console.log(error);
     }
-   };
+  };
 
   return (
     <Profile
       name='My'
-      desc='Welcome to your personalized profile page. Share your exceptional prompts and inspire others with the power of your imagination'
+      desc={`Welcome to your personalized profile page. Share your 
+      exceptional prompts and inspire others with the power of your imagination`}
       data={posts}
       handleEdit={handleEdit}
       handleDelete={handleDelete}
