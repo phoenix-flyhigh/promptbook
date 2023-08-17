@@ -1,4 +1,4 @@
-import { CreatePromptRequest } from "@/app/create-prompt/page";
+import { CreatePromptRequest } from "@/app/create-post/page";
 import axios from "axios";
 
 export interface User {

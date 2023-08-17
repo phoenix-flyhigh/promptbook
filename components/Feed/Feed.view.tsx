@@ -1,7 +1,7 @@
 "use client";
 
-import PromptService, { Post } from "@/utils/PromptService";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { Post } from "@/utils/PromptService";
+import { useState, Dispatch, SetStateAction } from "react";
 import Card from "../Card";
 
 export type UseStateType<T> = [T, Dispatch<SetStateAction<T>>]

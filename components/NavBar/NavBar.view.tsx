@@ -52,7 +52,7 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                                             My Profile
                                         </Link>
                                         <Link
-                                            href="/create-prompt"
+                                            href="/create-post"
                                             className="dropdown_link"
                                             onClick={() => setToggleProfileMenu(false)}
                                         >

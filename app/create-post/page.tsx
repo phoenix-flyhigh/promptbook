@@ -13,7 +13,7 @@ export interface CreatePromptRequest {
   tag: string
 }
 
-const CreatePrompt = () => {
+const CreatePost = () => {
   const router = useRouter();
   const { data: session, status }: any = useSession();
   const [submitting, setSubmitting] = useState(false);
@@ -38,7 +38,7 @@ const CreatePrompt = () => {
     return <p>Access Denied</p>
   }
 
-  const createPrompt = async (e: MouseEvent) => {
+  const createPost = async (e: MouseEvent) => {
     setError(false)
     e.preventDefault();
     setSubmitting(true);
@@ -75,10 +75,10 @@ const CreatePrompt = () => {
         post={post}
         setPost={setPost}
         submitting={submitting}
-        handleSubmit={createPrompt}
+        handleSubmit={createPost}
       />
     </div>
   )
 }
 
-export default CreatePrompt
+export default CreatePost

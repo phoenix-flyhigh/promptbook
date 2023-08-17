@@ -1,4 +1,4 @@
-import { CreatePromptRequest } from "@/app/create-prompt/page";
+import { CreatePromptRequest } from "@/app/create-post/page";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 import PromptService from "../PromptService";

@@ -1,7 +1,7 @@
 import PromptService from "../PromptService"
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import { CreatePromptRequest } from "@/app/create-prompt/page";
+import { CreatePromptRequest } from "@/app/create-post/page";
 
 describe("Prompt service post prompt tests", () => {
     const handlers = [

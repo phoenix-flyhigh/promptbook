@@ -1,6 +1,6 @@
 import { screen, fireEvent, waitFor } from "@testing-library/react"
 import "isomorphic-fetch"
-import CreatePrompt from "../page"
+import CreatePost from "../page"
 import PromptService from "@/utils/PromptService";
 import renderWithSession from "@/utils/TestUtil";
 import mockPostsResponse from "@/utils/TestData";
@@ -25,13 +25,13 @@ describe("Create post page tests", () => {
 
     it("Should render the form to create a post", () => {
         jest.spyOn(PromptService, "postPrompt").mockResolvedValue(mockPostsResponse[0]);
-        renderWithSession(<CreatePrompt />);
+        renderWithSession(<CreatePost />);
         expect(screen.getByText("Your AI Prompt")).toBeInTheDocument()
     });
 
     it("Should redirect to home page if create post is successful", () => {
         const postSpy = jest.spyOn(PromptService, "postPrompt").mockResolvedValue(mockPostsResponse[0]);
-        renderWithSession(<CreatePrompt />);
+        renderWithSession(<CreatePost />);
         const prompt = screen.getByTestId("tid-prompt-input")
         const tag = screen.getByTestId("tid-tag-input")
         const createButton = screen.getByText("Create")
@@ -60,7 +60,7 @@ describe("Create post page tests", () => {
         const toastMessage = "Failed to create post. Please try again later"
 
         const postSpy = jest.spyOn(PromptService, "postPrompt").mockRejectedValue(new Error("internal error"));
-        renderWithSession(<CreatePrompt />);
+        renderWithSession(<CreatePost />);
         const prompt = screen.getByTestId("tid-prompt-input")
         const tag = screen.getByTestId("tid-tag-input")
         const createButton = screen.getByText("Create")
@@ -102,7 +102,7 @@ describe("Create post page tests", () => {
 
 describe("Create prompt page tests for not logged in users", () => {
     it("Should not render form and show appropriate error message", () => {
-        renderWithSession(<CreatePrompt />, null)
+        renderWithSession(<CreatePost />, null)
 
         expect(screen.getByText("Access Denied")).toBeInTheDocument()
         expect(screen.queryByText("Your AI Prompt")).not.toBeInTheDocument()
