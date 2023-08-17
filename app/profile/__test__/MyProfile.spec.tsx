@@ -48,17 +48,24 @@ describe("My profile page tests", () => {
         expect(routerSpy).toHaveBeenCalled()
     })
 
-    it("Should delete post on clicking delete button", async () => {
+    it("Should delete post on clicking delete button and show alert", async () => {
         const postToBeDeleted = screen.getByText("First post")
         expect(postToBeDeleted).toBeInTheDocument()
-        const editButton = screen.getByRole("button", { name: "Delete" })
+        const deleteButton = screen.getByRole("button", { name: "Delete" })
 
-        expect(editButton).toBeInTheDocument();
+        expect(deleteButton).toBeInTheDocument();
 
-        fireEvent.click(editButton);
+        fireEvent.click(deleteButton);
         await waitFor(() => {
             expect(screen.queryByTestId("tid-prompt-card")).not.toBeInTheDocument()
             expect(screen.queryByText("First post")).toBeNull()
+        })
+        expect(screen.getByText("Successfully deleted post")).toBeInTheDocument()
+        const closeButton = screen.getByTitle("Close")
+        fireEvent.click(closeButton)
+        
+        await waitFor(() => {
+            expect(screen.queryByText("Successfully deleted post")).not.toBeInTheDocument()
         })
     })
 })
@@ -77,7 +84,7 @@ describe("Fetch posts for user profile page tests", () => {
         jest.clearAllMocks()
     })
 
-    it("Should render loading text until fetch posts api call completes", () => {
+    it("Should render loading text until fetch posts api call completes", async() => {
         jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([mockPostsResponse[1]])
         renderWithSession(<MyProfile />, {
             user: {
@@ -86,6 +93,7 @@ describe("Fetch posts for user profile page tests", () => {
         })
 
         expect(screen.getByText("Loading...")).toBeInTheDocument();
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
     })
 
     it("Should render loading text until fetch posts api call completes",async () => {
@@ -105,5 +113,32 @@ describe("Fetch posts for user profile page tests", () => {
         await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
 
         expect(serviceSpy).toHaveBeenCalledTimes(2)
+    })
+
+    it("Should show alert if failed to delete post on clicking delete button", async () => {
+        const deleteServiceSpy = jest.spyOn(PromptService, "deletePrompt").mockRejectedValue(new Error("error"))
+        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([mockPostsResponse[1]])
+        renderWithSession(<MyProfile />, {
+            user: {
+                id: "23"
+            }
+        })
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+    
+        const postToBeDeleted = screen.getByText("First post")
+        expect(postToBeDeleted).toBeInTheDocument()
+        const deleteButton = screen.getByRole("button", { name: "Delete" })
+
+        fireEvent.click(deleteButton);
+        await waitFor(() => {
+            expect(screen.getByText("Failed to delete post! Please try again")).toBeInTheDocument()
+        })
+        const closeButton = screen.getByTitle("Close")
+        fireEvent.click(closeButton)
+        
+        expect(deleteServiceSpy).toHaveBeenCalledTimes(1)
+        await waitFor(() => {
+            expect(screen.queryByText("Failed to delete post! Please try again")).not.toBeInTheDocument()
+        })
     })
 })

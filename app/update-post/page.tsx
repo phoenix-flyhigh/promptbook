@@ -5,7 +5,7 @@ import Toast from '@/components/Toast'
 import PromptService, { Post } from '@/utils/PromptService'
 import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 
 export interface UpdatePromptRequest {
     prompt: string,
@@ -33,7 +33,7 @@ const EditPrompt = () => {
     const searchParams = useSearchParams();
     const promptId = searchParams.get("id");
 
-    const getPromptDetails = async () => {
+    const getPromptDetails = useCallback(async () => {
         setIsLoading(true)
         setLoadError(false)
         try {
@@ -46,11 +46,13 @@ const EditPrompt = () => {
         } finally {
             setIsLoading(false)
         }
-    }
+    }, [promptId])
+
     useEffect(() => {
         if (promptId && session?.user.id)
             getPromptDetails()
-    }, [promptId, session?.user.id])
+    }, [promptId, session?.user.id, getPromptDetails])
+
     if (!promptId) {
         return <p>Invalid Url. Please enter a valid prompt id</p>
     }
