@@ -91,19 +91,22 @@ describe("Failed api call tests for update page", () => {
             expect(toast).toBeInTheDocument()
         })
 
-        const closeButton = screen.getByTestId("tid-toast-close-btn")
+        const closeButton = screen.getByTitle("Close")
         fireEvent.click(closeButton)
 
-        expect(screen.queryByRole("alert")).not.toBeInTheDocument()
-        expect(screen.queryByText(toastMessage)).not.toBeInTheDocument()
+        await waitFor(() => {
+            expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+            expect(screen.queryByText(toastMessage)).not.toBeInTheDocument()
+        })
     })
 
-    it("Should render loading text until get api call finishes", () => {
+    it("Should render loading text until get api call finishes",async () => {
         jest.spyOn(PromptService, "getPrompt").mockResolvedValue(mockPostsResponse[0])
 
         renderWithSession(<EditPrompt />)
 
         expect(screen.getByText("Loading...")).toBeInTheDocument()
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
     })
 
     it("Should render error message and try again button on get api failure", async () => {

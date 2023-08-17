@@ -1,11 +1,12 @@
 "use client"
 
 import Form from '@/components/Form'
-import Toast from '@/components/Toast'
 import PromptService, { Post } from '@/utils/PromptService'
 import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Snackbar from '@mui/material/Snackbar';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
+import Alert from "@/components/Alert";
 
 export interface UpdatePromptRequest {
     prompt: string,
@@ -65,7 +66,7 @@ const EditPrompt = () => {
         return <p>Access Denied</p>
     }
 
-    if(isLoading) {
+    if (isLoading) {
         return <p>Loading...</p>
     }
 
@@ -101,11 +102,15 @@ const EditPrompt = () => {
 
     return (
         <>
-            <Toast
-                message="Failed to update post. Please try again later"
-                showToast={error}
-                onClose={() => setError(false)}
-            />
+            <Snackbar
+                open={error}
+                autoHideDuration={1000}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
+                    Failed to update post. Please try again later
+                </Alert>
+            </Snackbar>
             {!isLoading && !loadError &&
                 <Form
                     type="Edit"

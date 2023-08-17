@@ -1,12 +1,12 @@
 "use client"
 
 import Form from '@/components/Form'
-import Toast from '@/components/Toast'
 import PromptService, { Post } from '@/utils/PromptService'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useState } from 'react'
-
+import Snackbar from '@mui/material/Snackbar';
+import Alert from "@/components/Alert";
 export interface CreatePromptRequest {
   prompt: string,
   userId: string | undefined,
@@ -61,11 +61,15 @@ const CreatePrompt = () => {
 
   return (
     <div className="overlap_parent">
-      <Toast
-        message="Failed to create post. Please try again later"
-        showToast={error}
-        onClose={() => setError(false)}
-      />
+      <Snackbar
+        open={error}
+        autoHideDuration={1000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
+          Failed to create post. Please try again later
+        </Alert>
+      </Snackbar>
       <Form
         type="Create"
         post={post}

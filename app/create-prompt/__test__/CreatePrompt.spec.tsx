@@ -90,11 +90,13 @@ describe("Create post page tests", () => {
 
         })
 
-        const closeButton = screen.getByTestId("tid-toast-close-btn")
+        const closeButton = screen.getByTitle("Close")
         fireEvent.click(closeButton)
 
-        expect(screen.queryByRole("alert")).not.toBeInTheDocument()
-        expect(screen.queryByText(toastMessage)).not.toBeInTheDocument()
+        await waitFor(() => {
+            expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+            expect(screen.queryByText(toastMessage)).not.toBeInTheDocument()
+        })
     })
 })
 

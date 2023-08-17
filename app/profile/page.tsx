@@ -8,15 +8,8 @@ import UserService from "@/utils/UserService";
 import { UseStateType } from "@/components/Feed/Feed.view";
 import { useRouter } from "next/navigation";
 import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import React from "react";
-
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import Alert from "@/components/Alert";
 
 const MyProfile = () => {
   const { data: session, status }: any = useSession();
