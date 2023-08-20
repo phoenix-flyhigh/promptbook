@@ -74,7 +74,7 @@ describe("My profile page tests for not logged in users", () => {
     it("Should not render page data and show appropriate error message", () => {
         renderWithSession(<MyProfile />, null)
 
-        expect(screen.getByText("Access Denied")).toBeInTheDocument()
+        expect(screen.getByText("Access Denied. Please sign in to view this page")).toBeInTheDocument()
         expect(screen.queryByText("My Profile")).not.toBeInTheDocument()
     })
 })

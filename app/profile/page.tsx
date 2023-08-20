@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import Snackbar from '@mui/material/Snackbar';
 import React from "react";
 import Alert from "@/components/Alert";
+import LoadingAndErrorHandler from "@/components/LoadingAndErrorHandler";
 
 const MyProfile = () => {
   const { data: session, status }: any = useSession();
@@ -39,28 +40,6 @@ const MyProfile = () => {
     if (session?.user.id && !posts.length) fetchPosts();
   }, [session?.user.id, fetchPosts, posts]);
 
-  if (status === "loading") {
-    return <p>Loading...</p>
-  }
-
-  if (status === "unauthenticated") {
-    return <p>Access Denied</p>
-  }
-
-  if (isLoading) {
-    return <p>Loading...</p>
-  }
-
-  if (fetchPostsError) {
-    return (
-      <p>
-        Failed to load posts
-        <br />
-        <button onClick={() => fetchPosts()}>Try again</button>
-      </p>
-    )
-  }
-
   const handleEdit = (post: Post) => {
     router.push(`/update-post?id=${post._id}`)
   };
@@ -78,32 +57,43 @@ const MyProfile = () => {
 
   return (
     <>
-      <Snackbar
-        open={showSuccessToast}
-        autoHideDuration={1000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setShowSuccessToast(false)} severity="success" sx={{ width: '100%' }}>
-          Successfully deleted post
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={showErrorToast}
-        autoHideDuration={1000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setShowErrorToast(false)} severity="error" sx={{ width: '100%' }}>
-          Failed to delete post! Please try again
-        </Alert>
-      </Snackbar>
-      <Profile
-        name='My'
-        desc={`Welcome to your personalized profile page. Share your 
-              exceptional prompts and inspire others with the power of your imagination`}
-        data={posts}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
+      <LoadingAndErrorHandler
+        sessionStatus={status}
+        loading={isLoading}
+        error={fetchPostsError}
+        errorMessage="Failed to load posts"
+        retryCallback={fetchPosts}
       />
+      {!isLoading && !fetchPostsError &&
+        <>
+          <Snackbar
+            open={showSuccessToast}
+            autoHideDuration={1000}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert onClose={() => setShowSuccessToast(false)} severity="success" sx={{ width: '100%' }}>
+              Successfully deleted post
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            open={showErrorToast}
+            autoHideDuration={1000}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert onClose={() => setShowErrorToast(false)} severity="error" sx={{ width: '100%' }}>
+              Failed to delete post! Please try again
+            </Alert>
+          </Snackbar>
+          <Profile
+            name='My'
+            desc={`Welcome to your personalized profile page. Share your 
+              exceptional prompts and inspire others with the power of your imagination`}
+            data={posts}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+        </>
+      }
     </>
   );
 };
