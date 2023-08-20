@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useState } from 'react'
 import Snackbar from '@mui/material/Snackbar';
 import Alert from "@/components/Alert";
+import LoadingAndErrorHandler from "@/components/LoadingAndErrorHandler";
+
 export interface CreatePromptRequest {
   prompt: string,
   userId: string | undefined,
@@ -29,14 +31,6 @@ const CreatePost = () => {
     },
     _id: ""
   })
-
-  if (status === "loading") {
-    return <p>Loading...</p>
-  }
-
-  if (status === "unauthenticated") {
-    return <p>Access Denied</p>
-  }
 
   const createPost = async (e: MouseEvent) => {
     setError(false)
@@ -61,22 +55,33 @@ const CreatePost = () => {
 
   return (
     <>
-      <Snackbar
-        open={error}
-        autoHideDuration={1000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
-          Failed to create post. Please try again later
-        </Alert>
-      </Snackbar>
-      <Form
-        type="Create"
-        post={post}
-        setPost={setPost}
-        submitting={submitting}
-        handleSubmit={createPost}
+      <LoadingAndErrorHandler
+        sessionStatus={status}
+        loading={false}
+        error={false}
+        errorMessage=""
+        retryCallback={() => { }}
       />
+      {status === "authenticated" &&
+        <>
+          <Snackbar
+            open={error}
+            autoHideDuration={1000}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
+              Failed to create post. Please try again later
+            </Alert>
+          </Snackbar>
+          <Form
+            type="Create"
+            post={post}
+            setPost={setPost}
+            submitting={submitting}
+            handleSubmit={createPost}
+          />
+        </>
+      }
     </>
   )
 }

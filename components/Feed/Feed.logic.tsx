@@ -1,6 +1,7 @@
 "use client"
 import PromptService, { Post } from '@/utils/PromptService';
 import React, { useEffect, useState } from 'react'
+import LoadingAndErrorHandler from '@/components/LoadingAndErrorHandler';
 import FeedView from './Feed.view'
 
 const Feed: () => JSX.Element = () => {
@@ -25,19 +26,19 @@ const Feed: () => JSX.Element = () => {
         fetchPosts();
     }, []);
 
-    if (loading)
-        return (<p>Loading...</p>)
-    if (error)
-        return (
-            <p>
-                Failed to load posts
-                <br/>
-                <button onClick={() => fetchPosts()}>Try again</button>
-            </p>
-        )
     return posts.length ? (
         <FeedView posts={posts} />
-    ): <></>
+    ) :
+        <>
+            <br />
+            <LoadingAndErrorHandler
+                sessionStatus={null}
+                loading={loading}
+                error={error}
+                errorMessage="Failed to load posts"
+                retryCallback={fetchPosts}
+            />
+        </>
 
 }
 

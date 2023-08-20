@@ -128,7 +128,7 @@ describe("Update prompt page tests for not logged in users", () => {
     it("Should not render form show with appropriate error message", () => {
         renderWithSession(<EditPrompt />, null)
 
-        expect(screen.getByText("Access Denied")).toBeInTheDocument()
+        expect(screen.getByText("Access Denied. Please sign in to view this page")).toBeInTheDocument()
         expect(screen.queryByText("Your AI Prompt")).not.toBeInTheDocument()
     })
 })

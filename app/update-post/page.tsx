@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Snackbar from '@mui/material/Snackbar';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import Alert from "@/components/Alert";
+import LoadingAndErrorHandler from "@/components/LoadingAndErrorHandler";
 
 export interface UpdatePromptRequest {
     prompt: string,
@@ -58,28 +59,6 @@ const EditPrompt = () => {
         return <p>Invalid Url. Please enter a valid prompt id</p>
     }
 
-    if (status === "loading") {
-        return <p>Loading...</p>
-    }
-
-    if (status === "unauthenticated") {
-        return <p>Access Denied</p>
-    }
-
-    if (isLoading) {
-        return <p>Loading...</p>
-    }
-
-    if (loadError) {
-        return (
-            <p>
-                Failed to load post
-                <br />
-                <button onClick={() => getPromptDetails()}>Try again</button>
-            </p>
-        )
-    }
-
     const updatePrompt = async (e: MouseEvent) => {
         setError(false)
         e.preventDefault();
@@ -102,6 +81,13 @@ const EditPrompt = () => {
 
     return (
         <>
+            <LoadingAndErrorHandler
+                sessionStatus={status}
+                loading={isLoading}
+                error={loadError}
+                errorMessage="Failed to load post"
+                retryCallback={getPromptDetails}
+            />
             <Snackbar
                 open={error}
                 autoHideDuration={1000}

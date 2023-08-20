@@ -104,7 +104,7 @@ describe("Create prompt page tests for not logged in users", () => {
     it("Should not render form and show appropriate error message", () => {
         renderWithSession(<CreatePost />, null)
 
-        expect(screen.getByText("Access Denied")).toBeInTheDocument()
+        expect(screen.getByText("Access Denied. Please sign in to view this page")).toBeInTheDocument()
         expect(screen.queryByText("Your AI Prompt")).not.toBeInTheDocument()
     })
 })

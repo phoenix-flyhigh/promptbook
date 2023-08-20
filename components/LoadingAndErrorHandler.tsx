@@ -1,7 +1,7 @@
 import CircularProgress from '@mui/material/CircularProgress';
 
 interface LoadingAndErrorHandlerProps {
-  sessionStatus: string,
+  sessionStatus: string | null,
   loading: boolean,
   error: boolean,
   errorMessage: string,
