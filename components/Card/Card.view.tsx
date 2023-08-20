@@ -48,7 +48,7 @@ const CardView = ({
                     />
 
                     <div className='flex flex-col'>
-                        <h3 className='font-satoshi font-semibold text-gray-900'>
+                        <h3 className='font-satoshi font-semibold text-gray-900 dark:text-stone-400'>
                             {post.creator.username}
                         </h3>
                         <p className='font-inter text-sm text-gray-500'>
@@ -71,9 +71,9 @@ const CardView = ({
                 </div>
             </div>
 
-            <p className='my-4 font-satoshi text-sm text-gray-700'>{post.prompt}</p>
+            <p className='my-4 font-satoshi text-sm text-gray-700 dark:text-slate-100'>{post.prompt}</p>
             <p
-                className='font-inter text-sm blue_gradient cursor-pointer'
+                className='font-inter text-sm blue_gradient cursor-pointer dark:text-blue-400'
                 onClick={() => handleTagClick && handleTagClick(post.tag)}
             >
                 #{post.tag}

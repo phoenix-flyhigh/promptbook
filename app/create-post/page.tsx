@@ -60,7 +60,7 @@ const CreatePost = () => {
   }
 
   return (
-    <div className="overlap_parent">
+    <>
       <Snackbar
         open={error}
         autoHideDuration={1000}
@@ -77,7 +77,7 @@ const CreatePost = () => {
         submitting={submitting}
         handleSubmit={createPost}
       />
-    </div>
+    </>
   )
 }
 
