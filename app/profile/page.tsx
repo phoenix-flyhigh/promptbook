@@ -13,7 +13,7 @@ import Alert from "@/components/Alert";
 import LoadingAndErrorHandler from "@/components/LoadingAndErrorHandler";
 
 const MyProfile = () => {
-  const { status }: any = useSession();
+  const { data: session, status }: any = useSession();
   const router: any = useRouter();
   const [posts, setPosts]: UseStateType<Post[]> = useState([] as Post[]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -99,6 +99,7 @@ const MyProfile = () => {
             data={posts}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
+            isLoggedInUserProfile={session?.user.id === userId}
           />
         </>
       }

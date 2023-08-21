@@ -30,6 +30,7 @@ describe("Profile component tests", () => {
             data={[mockPostsResponse[1]]}
             handleEdit={() => { }}
             handleDelete={() => { }}
+            isLoggedInUserProfile={true}
         />, {
             user: { id: "23" }
         })
@@ -47,6 +48,7 @@ describe("Profile component tests", () => {
             data={[]}
             handleEdit={() => { }}
             handleDelete={() => { }}
+            isLoggedInUserProfile={true}
         />, {
             user: { id: "23" }
         })

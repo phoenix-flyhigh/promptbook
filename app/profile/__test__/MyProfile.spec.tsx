@@ -146,3 +146,39 @@ describe("Fetch posts for user profile page tests", () => {
         })
     })
 })
+
+describe("No posts available for user profile tests", () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+    it(`Should render create post button if the user
+        profile is that of logged in user`, async () => {
+            jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([])
+            renderWithSession(<MyProfile />, {
+                user: {
+                    id: "23"
+                }
+            })
+    
+            await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+
+            expect(screen.getByText("No posts yet")).toBeInTheDocument();
+            expect(screen.getByRole("button", {name : "Create Post"})).toBeInTheDocument()
+    })
+
+    it(`Should not render create post button if the user
+        profile is not that of logged in user`, async() => {
+            jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([])
+            renderWithSession(<MyProfile />, {
+                user: {
+                    id: "7"
+                }
+            })
+    
+            await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+
+            expect(screen.getByText("No posts yet")).toBeInTheDocument();
+            expect(screen.queryByText("Start sharing by creating a post")).not.toBeInTheDocument();
+            expect(screen.queryByRole("button", {name : "Create Post"})).not.toBeInTheDocument()
+    })
+})
