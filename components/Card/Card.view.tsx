@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Post } from "@/utils/PromptService";
 import { UserDetailsFromSession } from "@/utils/AuthUtil";
 import { useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface CardViewProps {
     post: Post,
@@ -22,7 +22,7 @@ const CardView = ({
 }: CardViewProps) => {
 
     const { data: session } = useSession();
-
+    const router = useRouter();
     const pathName = usePathname();
     const [copied, setCopied] = useState("");
 
@@ -37,7 +37,9 @@ const CardView = ({
         <div className='prompt_card' data-testid="tid-prompt-card">
             <div className='flex justify-between items-start gap-5'>
                 <div
+                    data-testid="tid-author-section"
                     className='flex-1 flex justify-start items-center gap-3 cursor-pointer'
+                    onClick={() => router.push(`/profile?id=${post.creator._id}`)}
                 >
                     <Image
                         src={post.creator.image}
@@ -82,13 +84,13 @@ const CardView = ({
                 <div className='mt-5 flex-end gap-4 border-t border-gray-100 pt-3'>
                     <button
                         className='font-inter text-sm green_gradient cursor-pointer'
-                        onClick={handleEdit ? () => handleEdit(post) : () => {}}
+                        onClick={handleEdit ? () => handleEdit(post) : () => { }}
                     >
                         Edit
                     </button>
                     <button
                         className='font-inter text-sm orange_gradient cursor-pointer'
-                        onClick={handleDelete ? () => handleDelete(post) : () => {}}
+                        onClick={handleDelete ? () => handleDelete(post) : () => { }}
                     >
                         Delete
                     </button>

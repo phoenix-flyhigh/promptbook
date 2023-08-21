@@ -4,6 +4,17 @@ import renderWithSession from '@/utils/TestUtil'
 import { screen, waitFor } from '@testing-library/react'
 import Home from '../page'
 
+jest.mock("next/navigation", () => {
+  const actual = jest.requireActual("next/navigation");
+  return {
+      ...actual,
+      useRouter: jest.fn().mockImplementation(() => ({
+          push: jest.fn()
+      })),
+      usePathname: jest.fn().mockReturnValue("/profile")
+  };
+});
+
 describe('Home page tests', () => {
   beforeEach(() => {
     jest.spyOn(PromptService, "getPrompts").mockResolvedValue(mockPostsResponse)

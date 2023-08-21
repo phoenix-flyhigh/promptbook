@@ -9,6 +9,9 @@ jest.mock("next/navigation", () => {
     const actual = jest.requireActual("next/navigation");
     return {
         ...actual,
+        useRouter: jest.fn().mockImplementation(() => ({
+            push: jest.fn()
+        })),
         usePathname: jest.fn().mockReturnValue("/")
     };
 });

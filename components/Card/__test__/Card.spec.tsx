@@ -3,16 +3,22 @@ import renderWithSession from "@/utils/TestUtil"
 import { fireEvent, screen } from "@testing-library/react"
 import Card from ".."
 
+const routerSpy = jest.fn()
+
 jest.mock("next/navigation", () => {
     const actual = jest.requireActual("next/navigation");
     return {
         ...actual,
+        useRouter: jest.fn().mockImplementation(() => ({
+            push: routerSpy
+        })),
         usePathname: jest.fn().mockReturnValue("/profile")
     };
 });
 
 describe("Card component tests", () => {
     beforeEach(() => {
+        jest.clearAllMocks();
         Object.assign(navigator, {
             clipboard: {
                 writeText: jest.fn(),
@@ -44,6 +50,16 @@ describe("Card component tests", () => {
 
         expect(screen.getByAltText("tick_icon")).toBeInTheDocument()
         expect(screen.queryByAltText("copy_icon")).toBeNull()
+    })
+
+    it(`Should redirect to the author profile on 
+        clicking on the author id in the card`, () => {
+        const authorSection = screen.getByTestId("tid-author-section")
+
+        fireEvent.click(authorSection)
+
+        expect(routerSpy).toHaveBeenCalledTimes(1)
+        expect(routerSpy).toHaveBeenCalledWith('/profile?id=1')
     })
 })
 
@@ -133,5 +149,4 @@ describe("Edit and Delete button in Card tests", () => {
         expect(screen.queryByText("Edit")).toBeNull();
         expect(screen.queryByText("Delete")).toBeNull();
     })
-
 })
