@@ -78,7 +78,7 @@ const CardView = ({
             >
                 #{post.tag}
             </p>
-            {user?.id === post.creator._id && pathName === "/profile" && (
+            {user?.id === post.creator._id && pathName.startsWith("/profile") && (
                 <div className='mt-5 flex-end gap-4 border-t border-gray-100 pt-3'>
                     <button
                         className='font-inter text-sm green_gradient cursor-pointer'

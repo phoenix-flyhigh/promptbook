@@ -1,4 +1,3 @@
-import { Post } from "@/utils/PromptService";
 import Card from "@/components/Card";
 import { ProfileProps } from "./Profile.logic";
 

@@ -57,6 +57,7 @@ describe("Edit post page tests", () => {
         await waitFor(() => {
             expect(updateServiceSpy).toHaveBeenCalled();
             expect(routerSpy).toHaveBeenCalled();
+            expect(routerSpy).toHaveBeenCalledWith('/profile?id=7')
         })
     })
 })

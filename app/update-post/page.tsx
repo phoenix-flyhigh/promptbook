@@ -69,7 +69,7 @@ const EditPrompt = () => {
                 prompt: post.prompt,
                 tag: post.tag,
             })
-            router.push("/profile");
+            router.push(`/profile?id=${session?.user.id}`);
         }
         catch (error) {
             setError(true)

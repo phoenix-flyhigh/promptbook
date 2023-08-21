@@ -49,6 +49,7 @@ describe("My profile page tests", () => {
         fireEvent.click(editButton);
 
         expect(routerSpy).toHaveBeenCalled()
+        expect(routerSpy).toHaveBeenCalledWith('/update-post?id=6')
     })
 
     it("Should delete post on clicking delete button and show alert", async () => {
