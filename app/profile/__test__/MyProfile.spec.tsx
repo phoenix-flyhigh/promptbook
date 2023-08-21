@@ -14,7 +14,10 @@ jest.mock("next/navigation", () => {
         useRouter: jest.fn().mockImplementation(() => ({
             push: routerSpy
         })),
-        usePathname: jest.fn().mockReturnValue("/profile")
+        usePathname: jest.fn().mockReturnValue("/profile"),
+        useSearchParams: jest.fn().mockImplementation(() => ({
+            get: (id: string) => "23"
+        }))
     };
 });
 

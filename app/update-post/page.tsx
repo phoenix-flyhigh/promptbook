@@ -56,7 +56,7 @@ const EditPrompt = () => {
     }, [promptId, session?.user.id, getPromptDetails])
 
     if (!promptId) {
-        return <p>Invalid Url. Please enter a valid prompt id</p>
+        return <p className="desc font-bold">Invalid Url. Please enter a valid prompt id</p>
     }
 
     const updatePrompt = async (e: MouseEvent) => {

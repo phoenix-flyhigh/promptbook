@@ -6,14 +6,14 @@ import Profile from "@/components/Profile";
 import PromptService, { Post } from "@/utils/PromptService";
 import UserService from "@/utils/UserService";
 import { UseStateType } from "@/components/Feed/Feed.view";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Snackbar from '@mui/material/Snackbar';
 import React from "react";
 import Alert from "@/components/Alert";
 import LoadingAndErrorHandler from "@/components/LoadingAndErrorHandler";
 
 const MyProfile = () => {
-  const { data: session, status }: any = useSession();
+  const { status }: any = useSession();
   const router: any = useRouter();
   const [posts, setPosts]: UseStateType<Post[]> = useState([] as Post[]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -21,24 +21,28 @@ const MyProfile = () => {
   const [showSuccessToast, setShowSuccessToast] = useState<boolean>(false);
   const [showErrorToast, setShowErrorToast] = useState<boolean>(false);
 
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("id");
+
   const fetchPosts = useCallback(async () => {
     setIsLoading(true)
-    await UserService.getPostsByUser(session?.user.id)
-      .then((response) => {
-        setPosts(response)
-        setFetchPostsError(false)
-      })
-      .catch((e) => {
-        setFetchPostsError(true)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }, [session?.user.id])
+    if (userId)
+      await UserService.getPostsByUser(userId)
+        .then((response) => {
+          setPosts(response)
+          setFetchPostsError(false)
+        })
+        .catch((e) => {
+          setFetchPostsError(true)
+        })
+        .finally(() => {
+          setIsLoading(false)
+        })
+  }, [userId])
 
   useEffect(() => {
-    if (session?.user.id && !posts.length) fetchPosts();
-  }, [session?.user.id, fetchPosts, posts]);
+    if (userId) fetchPosts();
+  }, [userId, fetchPosts]);
 
   const handleEdit = (post: Post) => {
     router.push(`/update-post?id=${post._id}`)
@@ -54,6 +58,10 @@ const MyProfile = () => {
       setShowErrorToast(true)
     }
   };
+
+  if (!userId) {
+    return <p className="desc font-bold">Invalid Url. Please enter a valid user id</p>
+  }
 
   return (
     <>

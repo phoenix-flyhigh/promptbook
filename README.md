@@ -28,16 +28,20 @@ npm run test:mutation
 
 ## Local environment Setup
 To set it up in the local, add a dotenv file with the following keys:
-<!-- From the OAuth client created in console.cloud.google.com -->
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
-<!-- \From the database created in free cluster in mongo db atlas -->
-MONGODB_URI
 
-NEXTAUTH_URL=http://localhost:3000/
-NEXTAUTH_URL_INTERNAL=http://localhost:3000
+From the OAuth client created in console.cloud.google.com
+1. GOOGLE_CLIENT_ID
+2. GOOGLE_CLIENT_SECRET
 
-<!-- From a 64 bit secret generated for next auth -->
-<!-- command to create it -> openssl rand -base64 32 -->
-NEXTAUTH_SECRET
+From the database created in free cluster in mongo db atlas
+3. MONGODB_URI
+
+The url where the local app is running
+4. NEXTAUTH_URL=http://localhost:3000/
+
+The redirection url after successful authentication
+5. NEXTAUTH_URL_INTERNAL=http://localhost:3000
+
+A 64 bit secret generated for next auth. Command to create it -> openssl rand -base64 32 
+6. NEXTAUTH_SECRET
 

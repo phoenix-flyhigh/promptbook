@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import SignInSetup from "./SignInSetup";
 import { UserDetailsFromSession } from "@/utils/AuthUtil";
@@ -15,6 +15,7 @@ interface NavBarViewProps {
 const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
     isUserLoggedIn
 }: NavBarViewProps) => {
+    const {data: session} : any = useSession();
     const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
 
     return (
@@ -45,7 +46,7 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                                 toggleProfileMenu && (
                                     <div className="dropdown" data-testid="tid-nav-dropdown">
                                         <Link
-                                            href="/profile"
+                                            href={`/profile?id=${session?.user.id}`}
                                             className="dropdown_link"
                                             onClick={() => setToggleProfileMenu(false)}
                                         >
