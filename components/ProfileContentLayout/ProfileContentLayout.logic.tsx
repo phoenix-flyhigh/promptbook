@@ -1,6 +1,6 @@
 import { Post } from "@/utils/PromptService"
 import { useRouter } from "next/navigation";
-import ProfileView from "./Profile.view"
+import ProfileContentLayoutView from "./ProfileContentLayout.view"
 
 export interface ProfileProps {
     name: string,
@@ -11,7 +11,7 @@ export interface ProfileProps {
     isLoggedInUserProfile: boolean
 }
 
-const Profile = ({
+const ProfileContentLayout = ({
     name,
     desc,
     data,
@@ -24,7 +24,7 @@ const Profile = ({
     const handleCreate = () => router.push("/create-post")
 
     return (
-        <ProfileView
+        <ProfileContentLayoutView
             name={name}
             desc={desc}
             data={data}
@@ -36,4 +36,4 @@ const Profile = ({
     )
 }
 
-export default Profile
+export default ProfileContentLayout

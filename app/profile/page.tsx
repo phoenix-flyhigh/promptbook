@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
-import Profile from "@/components/Profile";
+import ProfileContentLayout from "@/components/ProfileContentLayout";
 import PromptService, { Post } from "@/utils/PromptService";
 import UserService from "@/utils/UserService";
 import { UseStateType } from "@/components/Feed/Feed.view";
@@ -92,7 +92,7 @@ const MyProfile = () => {
               Failed to delete post! Please try again
             </Alert>
           </Snackbar>
-          <Profile
+          <ProfileContentLayout
             name='My'
             desc={`Welcome to your personalized profile page. Share your 
               exceptional prompts and inspire others with the power of your imagination`}

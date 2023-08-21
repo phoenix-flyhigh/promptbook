@@ -1,7 +1,7 @@
 import { fireEvent, screen } from "@testing-library/react"
 import mockPostsResponse from "@/utils/TestData"
 import renderWithSession from "@/utils/TestUtil"
-import Profile from ".."
+import ProfileContentLayout from ".."
 
 const routerSpy = jest.fn()
 jest.mock("next/navigation", () => {
@@ -18,13 +18,13 @@ jest.mock("next/navigation", () => {
     };
 });
 
-describe("Profile component tests", () => {
+describe("ProfileContentLayout component tests", () => {
     beforeEach(() => {
         jest.clearAllMocks();
     })
 
     it("Should render the user profile", () => {
-        renderWithSession(<Profile
+        renderWithSession(<ProfileContentLayout
             name={"My name"}
             desc={"Description"}
             data={[mockPostsResponse[1]]}
@@ -42,7 +42,7 @@ describe("Profile component tests", () => {
 
     it(`Should render the user profile with no posts tag 
         when there are no posts`, () => {
-        renderWithSession(<Profile
+        renderWithSession(<ProfileContentLayout
             name={"My name"}
             desc={"Description"}
             data={[]}

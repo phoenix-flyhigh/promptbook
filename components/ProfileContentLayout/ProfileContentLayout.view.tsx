@@ -1,12 +1,12 @@
 import Card from "@/components/Card";
-import { ProfileProps } from "./Profile.logic";
+import { ProfileProps } from "./ProfileContentLayout.logic";
 
 interface ProfileViewProps extends ProfileProps {
     isLoggedInUserProfile: boolean,
     handleCreate: () => void
 }
 
-const ProfileView = ({
+const ProfileContentLayoutView = ({
     name,
     desc,
     data,
@@ -57,4 +57,4 @@ const ProfileView = ({
     );
 };
 
-export default ProfileView;
+export default ProfileContentLayoutView;
