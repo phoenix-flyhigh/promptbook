@@ -1,6 +1,5 @@
 import axios from "axios"
-import { User } from "next-auth";
-import { Post } from "./PromptService";
+import { Post, User } from "./PromptService";
 
 export interface userProfileData {
     creator: User,

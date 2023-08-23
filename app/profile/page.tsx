@@ -3,9 +3,8 @@
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import ProfileContentLayout from "@/components/ProfileContentLayout";
-import PromptService, { Post } from "@/utils/PromptService";
+import PromptService, { Post, User } from "@/utils/PromptService";
 import UserService from "@/utils/UserService";
-import { UseStateType } from "@/components/Feed/Feed.view";
 import { useRouter, useSearchParams } from "next/navigation";
 import Snackbar from '@mui/material/Snackbar';
 import React from "react";
@@ -15,7 +14,8 @@ import LoadingAndErrorHandler from "@/components/LoadingAndErrorHandler";
 const MyProfile = () => {
   const { data: session, status }: any = useSession();
   const router: any = useRouter();
-  const [posts, setPosts]: UseStateType<Post[]> = useState([] as Post[]);
+  const [posts, setPosts] = useState<Post[]>([] as Post[]);
+  const [userDetails, setUserDetails] = useState<User>({} as User)
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [fetchPostsError, setFetchPostsError] = useState<boolean>(false);
   const [showSuccessToast, setShowSuccessToast] = useState<boolean>(false);
@@ -30,6 +30,7 @@ const MyProfile = () => {
       await UserService.getPostsByUser(userId)
         .then((response) => {
           setPosts(response.posts)
+          setUserDetails(response.creator)
           setFetchPostsError(false)
         })
         .catch((e) => {
@@ -63,6 +64,8 @@ const MyProfile = () => {
     return <p className="desc font-bold">Invalid Url. Please enter a valid user id</p>
   }
 
+  const isLoggedInUserProfile = session?.user.id === userId
+
   return (
     <>
       <LoadingAndErrorHandler
@@ -93,13 +96,12 @@ const MyProfile = () => {
             </Alert>
           </Snackbar>
           <ProfileContentLayout
-            name='My'
-            desc={`Welcome to your personalized profile page. Share your 
-              exceptional prompts and inspire others with the power of your imagination`}
+            name={`${userDetails.username}'s`}
+            desc={isLoggedInUserProfile ? `Welcome to your personalized profile page.` : ""}
             data={posts}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
-            isLoggedInUserProfile={session?.user.id === userId}
+            isLoggedInUserProfile={isLoggedInUserProfile}
           />
         </>
       }

@@ -5,6 +5,10 @@ import UserService from "@/utils/UserService"
 import MyProfile from "../page"
 import PromptService from "@/utils/PromptService"
 
+const getMockCreator = (id: string) => ({
+    _id: id, username: "sam", email: "", image: ""
+})
+
 const routerSpy = jest.fn()
 
 jest.mock("next/navigation", () => {
@@ -25,7 +29,7 @@ describe("My profile page tests", () => {
     beforeEach(async () => {
         jest.spyOn(PromptService, "deletePrompt").mockResolvedValue("Successfully deleted")
         jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
-            creator: { id: "" },
+            creator: getMockCreator("23"),
             posts: [mockPostsResponse[1]]
         })
         renderWithSession(<MyProfile />, {
@@ -41,7 +45,8 @@ describe("My profile page tests", () => {
     })
 
     it("Should render the feed for user profile", () => {
-        expect(screen.getByText("My Profile")).toBeInTheDocument();
+        expect(screen.getByText("sam's Profile")).toBeInTheDocument();
+        expect(screen.getByText(`Welcome to your personalized profile page.`)).toBeInTheDocument();
         expect(screen.getByText("First post")).toBeInTheDocument();
     })
 
@@ -77,12 +82,35 @@ describe("My profile page tests", () => {
     })
 })
 
-describe("My profile page tests for not logged in users", () => {
-    it("Should not render page data and show appropriate error message", () => {
+describe("My profile page tests for other users", () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+
+    it(`Should not render page data and show appropriate 
+        error message for not logged in users`, () => {
         renderWithSession(<MyProfile />, null)
 
         expect(screen.getByText("Access Denied. Please sign in to view this page")).toBeInTheDocument()
-        expect(screen.queryByText("My Profile")).not.toBeInTheDocument()
+        expect(screen.queryByText("sam's Profile")).not.toBeInTheDocument()
+    })
+
+    it(`Should not render description for other user profiles`, async () => {
+        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
+            creator: getMockCreator("23"),
+            posts: [mockPostsResponse[1]]
+        })
+
+        renderWithSession(<MyProfile />, {
+            user: {
+                id: "7"
+            }
+        })
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+
+        expect(screen.getByText("sam's Profile")).toBeInTheDocument();
+        expect(screen.queryByText(`Welcome to your personalized profile page.`)).not.toBeInTheDocument();
+        expect(screen.getByText("First post")).toBeInTheDocument();
     })
 })
 
@@ -93,7 +121,7 @@ describe("Fetch posts for user profile page tests", () => {
 
     it("Should render loading text until fetch posts api call completes", async () => {
         jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
-            creator: { id: "" },
+            creator: getMockCreator("23"),
             posts: [mockPostsResponse[1]]
         })
         renderWithSession(<MyProfile />, {
@@ -128,7 +156,7 @@ describe("Fetch posts for user profile page tests", () => {
     it("Should show alert if failed to delete post on clicking delete button", async () => {
         const deleteServiceSpy = jest.spyOn(PromptService, "deletePrompt").mockRejectedValue(new Error("error"))
         jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
-            creator: { id: "" },
+            creator: getMockCreator("23"),
             posts: [mockPostsResponse[1]]
         })
         renderWithSession(<MyProfile />, {
@@ -160,10 +188,11 @@ describe("No posts available for user profile tests", () => {
     beforeEach(() => {
         jest.clearAllMocks()
     })
+    
     it(`Should render create post button if the user
         profile is that of logged in user`, async () => {
         jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
-            creator: { id: "" },
+            creator: getMockCreator("23"),
             posts: []
         })
         renderWithSession(<MyProfile />, {
@@ -181,7 +210,7 @@ describe("No posts available for user profile tests", () => {
     it(`Should not render create post button if the user
         profile is not that of logged in user`, async () => {
         jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
-            creator: { id: "" },
+            creator: getMockCreator("23"),
             posts: []
         })
         renderWithSession(<MyProfile />, {
