@@ -24,7 +24,10 @@ jest.mock("next/navigation", () => {
 describe("My profile page tests", () => {
     beforeEach(async () => {
         jest.spyOn(PromptService, "deletePrompt").mockResolvedValue("Successfully deleted")
-        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([mockPostsResponse[1]])
+        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
+            creator: { id: "" },
+            posts: [mockPostsResponse[1]]
+        })
         renderWithSession(<MyProfile />, {
             user: {
                 id: "23"
@@ -67,7 +70,7 @@ describe("My profile page tests", () => {
         expect(screen.getByText("Successfully deleted post")).toBeInTheDocument()
         const closeButton = screen.getByTitle("Close")
         fireEvent.click(closeButton)
-        
+
         await waitFor(() => {
             expect(screen.queryByText("Successfully deleted post")).not.toBeInTheDocument()
         })
@@ -88,8 +91,11 @@ describe("Fetch posts for user profile page tests", () => {
         jest.clearAllMocks()
     })
 
-    it("Should render loading text until fetch posts api call completes", async() => {
-        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([mockPostsResponse[1]])
+    it("Should render loading text until fetch posts api call completes", async () => {
+        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
+            creator: { id: "" },
+            posts: [mockPostsResponse[1]]
+        })
         renderWithSession(<MyProfile />, {
             user: {
                 id: "23"
@@ -100,7 +106,7 @@ describe("Fetch posts for user profile page tests", () => {
         await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
     })
 
-    it("Should render loading text until fetch posts api call completes",async () => {
+    it("Should render loading text until fetch posts api call completes", async () => {
         const serviceSpy = jest.spyOn(UserService, "getPostsByUser").mockRejectedValue(new Error("error"))
         renderWithSession(<MyProfile />, {
             user: {
@@ -108,11 +114,11 @@ describe("Fetch posts for user profile page tests", () => {
             }
         })
         await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
-        
+
         expect(screen.getByText("Failed to load posts")).toBeInTheDocument();
         expect(serviceSpy).toHaveBeenCalledTimes(1)
-        
-        const tryAgainButton = screen.getByRole("button", {name: "Try again"})
+
+        const tryAgainButton = screen.getByRole("button", { name: "Try again" })
         fireEvent.click(tryAgainButton)
         await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
 
@@ -121,14 +127,17 @@ describe("Fetch posts for user profile page tests", () => {
 
     it("Should show alert if failed to delete post on clicking delete button", async () => {
         const deleteServiceSpy = jest.spyOn(PromptService, "deletePrompt").mockRejectedValue(new Error("error"))
-        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([mockPostsResponse[1]])
+        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
+            creator: { id: "" },
+            posts: [mockPostsResponse[1]]
+        })
         renderWithSession(<MyProfile />, {
             user: {
                 id: "23"
             }
         })
         await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
-    
+
         const postToBeDeleted = screen.getByText("First post")
         expect(postToBeDeleted).toBeInTheDocument()
         const deleteButton = screen.getByRole("button", { name: "Delete" })
@@ -139,7 +148,7 @@ describe("Fetch posts for user profile page tests", () => {
         })
         const closeButton = screen.getByTitle("Close")
         fireEvent.click(closeButton)
-        
+
         expect(deleteServiceSpy).toHaveBeenCalledTimes(1)
         await waitFor(() => {
             expect(screen.queryByText("Failed to delete post! Please try again")).not.toBeInTheDocument()
@@ -153,32 +162,38 @@ describe("No posts available for user profile tests", () => {
     })
     it(`Should render create post button if the user
         profile is that of logged in user`, async () => {
-            jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([])
-            renderWithSession(<MyProfile />, {
-                user: {
-                    id: "23"
-                }
-            })
-    
-            await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
+            creator: { id: "" },
+            posts: []
+        })
+        renderWithSession(<MyProfile />, {
+            user: {
+                id: "23"
+            }
+        })
 
-            expect(screen.getByText("No posts yet")).toBeInTheDocument();
-            expect(screen.getByRole("button", {name : "Create Post"})).toBeInTheDocument()
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+
+        expect(screen.getByText("No posts yet")).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Create Post" })).toBeInTheDocument()
     })
 
     it(`Should not render create post button if the user
-        profile is not that of logged in user`, async() => {
-            jest.spyOn(UserService, "getPostsByUser").mockResolvedValue([])
-            renderWithSession(<MyProfile />, {
-                user: {
-                    id: "7"
-                }
-            })
-    
-            await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+        profile is not that of logged in user`, async () => {
+        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
+            creator: { id: "" },
+            posts: []
+        })
+        renderWithSession(<MyProfile />, {
+            user: {
+                id: "7"
+            }
+        })
 
-            expect(screen.getByText("No posts yet")).toBeInTheDocument();
-            expect(screen.queryByText("Start sharing by creating a post")).not.toBeInTheDocument();
-            expect(screen.queryByRole("button", {name : "Create Post"})).not.toBeInTheDocument()
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+
+        expect(screen.getByText("No posts yet")).toBeInTheDocument();
+        expect(screen.queryByText("Start sharing by creating a post")).not.toBeInTheDocument();
+        expect(screen.queryByRole("button", { name: "Create Post" })).not.toBeInTheDocument()
     })
 })

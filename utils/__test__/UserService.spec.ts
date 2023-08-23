@@ -4,10 +4,13 @@ import UserService from "../UserService";
 
 describe("User service get all posts success test", () => {
     const successResponse: any = {
-        prompt: "s",
-        tag: "s",
-        _id: "7",
-        creator: {}
+        creator: {},
+        posts: [{
+            prompt: "s",
+            tag: "s",
+            _id: "7",
+            creator: {},
+        }]
     }
 
     const handlers = [

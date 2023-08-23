@@ -29,7 +29,7 @@ const MyProfile = () => {
     if (userId)
       await UserService.getPostsByUser(userId)
         .then((response) => {
-          setPosts(response)
+          setPosts(response.posts)
           setFetchPostsError(false)
         })
         .catch((e) => {

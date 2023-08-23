@@ -1,4 +1,5 @@
 import Prompt from "@/models/prompt";
+import User from "@/models/user";
 import { connectToDB } from "@/utils/database"
 import { getServerSession } from "next-auth/next";
 
@@ -23,7 +24,14 @@ export const GET = async (req: any, { params }: ParamsType) => {
             creator: params.id
         }).populate('creator');
 
-        return new Response(JSON.stringify(posts), {
+        const creator = await User.findById(params.id)
+
+        const response = {
+            creator: creator,
+            posts: posts
+        }
+
+        return new Response(JSON.stringify(response), {
             status: 200
         })
 
