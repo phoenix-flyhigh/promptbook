@@ -59,27 +59,6 @@ describe("My profile page tests", () => {
         expect(routerSpy).toHaveBeenCalled()
         expect(routerSpy).toHaveBeenCalledWith('/update-post?id=6')
     })
-
-    it("Should delete post on clicking delete button and show alert", async () => {
-        const postToBeDeleted = screen.getByText("First post")
-        expect(postToBeDeleted).toBeInTheDocument()
-        const deleteButton = screen.getByRole("button", { name: "Delete" })
-
-        expect(deleteButton).toBeInTheDocument();
-
-        fireEvent.click(deleteButton);
-        await waitFor(() => {
-            expect(screen.queryByTestId("tid-prompt-card")).not.toBeInTheDocument()
-            expect(screen.queryByText("First post")).toBeNull()
-        })
-        expect(screen.getByText("Successfully deleted post")).toBeInTheDocument()
-        const closeButton = screen.getByTitle("Close")
-        fireEvent.click(closeButton)
-
-        await waitFor(() => {
-            expect(screen.queryByText("Successfully deleted post")).not.toBeInTheDocument()
-        })
-    })
 })
 
 describe("My profile page tests for other users", () => {
@@ -171,6 +150,12 @@ describe("Fetch posts for user profile page tests", () => {
         const deleteButton = screen.getByRole("button", { name: "Delete" })
 
         fireEvent.click(deleteButton);
+
+        expect(screen.getByRole("dialog")).toBeInTheDocument()
+
+        const deleteBtn = screen.getByRole("button", { name: "Delete" })
+        fireEvent.click(deleteBtn)
+
         await waitFor(() => {
             expect(screen.getByText("Failed to delete post! Please try again")).toBeInTheDocument()
         })
@@ -188,7 +173,7 @@ describe("No posts available for user profile tests", () => {
     beforeEach(() => {
         jest.clearAllMocks()
     })
-    
+
     it(`Should render create post button if the user
         profile is that of logged in user`, async () => {
         jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({

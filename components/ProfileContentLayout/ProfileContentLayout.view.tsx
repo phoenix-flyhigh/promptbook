@@ -1,5 +1,10 @@
+"use client"
+
 import Card from "@/components/Card";
+import { useState } from "react";
 import { ProfileProps } from "./ProfileContentLayout.logic";
+import DeleteConfirmationDialog from "@/components/DeleteConfirmationDialog";
+import { Post } from "@/utils/PromptService";
 
 interface ProfileViewProps extends ProfileProps {
     isLoggedInUserProfile: boolean,
@@ -15,6 +20,9 @@ const ProfileContentLayoutView = ({
     isLoggedInUserProfile,
     handleCreate
 }: ProfileViewProps) => {
+    const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
+    const [postToBeDeleted, setPostToBeDeleted] = useState<Post>({} as Post);
+
     return (
         <section className='w-full'>
             <h1 className='head_text text-left'>
@@ -43,12 +51,35 @@ const ProfileContentLayoutView = ({
                     </div>
                 ) :
                 <div className='mt-10 prompt_layout'>
+                    <DeleteConfirmationDialog
+                        isOpen={showDeleteDialog}
+                        title="Delete Post"
+                        description="Are you sure you want to delete the post. If deleted the post will be lost forever"
+                        agreeBtnTitle="Delete"
+                        disagreeBtnTitle="Cancel"
+                        handleAgree={() => {
+                            setShowDeleteDialog(false)
+                            handleDelete(postToBeDeleted)
+                            setPostToBeDeleted({} as Post)
+                        }}
+                        handleDisagree={() => {
+                            setPostToBeDeleted({} as Post)
+                            setShowDeleteDialog(false)
+                        }}
+                        handleClose={() => {
+                            setPostToBeDeleted({} as Post)
+                            setShowDeleteDialog(false)
+                        }}
+                    />
                     {data.map((post) => (
                         <Card
                             key={post._id}
                             post={post}
                             handleEdit={() => handleEdit(post)}
-                            handleDelete={() => handleDelete(post)}
+                            handleDelete={() => {
+                                setPostToBeDeleted(post)
+                                setShowDeleteDialog(true)
+                            }}
                         />
                     ))}
                 </div>
