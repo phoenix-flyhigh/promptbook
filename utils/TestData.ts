@@ -2,7 +2,7 @@ import { Post } from "./PromptService";
 
 const mockPostsResponse: Post[] = [{
     prompt: "This is a prompt",
-    tag: "software",
+    tag: "#software",
     _id: "7",
     creator: {
       username: "s",
@@ -13,7 +13,7 @@ const mockPostsResponse: Post[] = [{
   },
   {
     prompt: "First post",
-    tag: "web",
+    tag: "#web",
     _id: "6",
     creator: {
       username: "sam",

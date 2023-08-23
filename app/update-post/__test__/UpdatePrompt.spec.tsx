@@ -39,7 +39,7 @@ describe("Edit post page tests", () => {
     it("Should render the form with existing post data", async () => {
         expect(screen.getByText("Edit Post")).toBeInTheDocument();
         const prompt = screen.getByText("This is a prompt")
-        const tag = screen.getByDisplayValue("software")
+        const tag = screen.getByDisplayValue("#software")
 
         expect(prompt).toBeInTheDocument();
         expect(tag).toBeInTheDocument();

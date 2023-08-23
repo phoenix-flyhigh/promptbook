@@ -78,7 +78,7 @@ const CardView = ({
                 className='font-inter text-sm blue_gradient cursor-pointer dark:text-blue-400'
                 onClick={() => handleTagClick && handleTagClick(post.tag)}
             >
-                #{post.tag}
+                {post.tag}
             </p>
             {user?.id === post.creator._id && pathName.startsWith("/profile") && (
                 <div className='mt-5 flex-end gap-4 border-t border-gray-100 pt-3'>
