@@ -11,7 +11,13 @@ const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
   testPathIgnorePatterns : [
     "stryker-tmp" 
-  ]
+  ],
+  coverageThreshold: {
+    "global": {
+      "lines": 90,
+      "branches": 80
+    }
+  }
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
