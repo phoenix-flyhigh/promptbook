@@ -1,6 +1,6 @@
 import renderWithSession from "@/utils/TestUtil";
 import { screen } from "@testing-library/dom";
-import MyProfile from "../page"
+import Profile from "../page"
 
 const routerSpy = jest.fn()
 
@@ -19,7 +19,7 @@ jest.mock("next/navigation", () => {
 
 describe("Invalid route tests for profile page", () => {
     it("Should not render form show with appropriate error message", () => {
-        renderWithSession(<MyProfile />, {
+        renderWithSession(<Profile />, {
             user: {
                 id: "23"
             }

@@ -11,7 +11,7 @@ import React from "react";
 import Alert from "@/components/Alert";
 import LoadingAndErrorHandler from "@/components/LoadingAndErrorHandler";
 
-const MyProfile = () => {
+const Profile = () => {
   const { data: session, status }: any = useSession();
   const router: any = useRouter();
   const [posts, setPosts] = useState<Post[]>([] as Post[]);
@@ -109,4 +109,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
+export default Profile;

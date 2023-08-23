@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, waitForElementToBeRemoved } from "@testing-
 import mockPostsResponse from "@/utils/TestData"
 import renderWithSession from "@/utils/TestUtil"
 import UserService from "@/utils/UserService"
-import MyProfile from "../page"
+import Profile from "../page"
 import PromptService from "@/utils/PromptService"
 
 const getMockCreator = (id: string) => ({
@@ -32,7 +32,7 @@ describe("My profile page tests", () => {
             creator: getMockCreator("23"),
             posts: [mockPostsResponse[1]]
         })
-        renderWithSession(<MyProfile />, {
+        renderWithSession(<Profile />, {
             user: {
                 id: "23"
             }
@@ -89,7 +89,7 @@ describe("My profile page tests for other users", () => {
 
     it(`Should not render page data and show appropriate 
         error message for not logged in users`, () => {
-        renderWithSession(<MyProfile />, null)
+        renderWithSession(<Profile />, null)
 
         expect(screen.getByText("Access Denied. Please sign in to view this page")).toBeInTheDocument()
         expect(screen.queryByText("sam's Profile")).not.toBeInTheDocument()
@@ -101,7 +101,7 @@ describe("My profile page tests for other users", () => {
             posts: [mockPostsResponse[1]]
         })
 
-        renderWithSession(<MyProfile />, {
+        renderWithSession(<Profile />, {
             user: {
                 id: "7"
             }
@@ -124,7 +124,7 @@ describe("Fetch posts for user profile page tests", () => {
             creator: getMockCreator("23"),
             posts: [mockPostsResponse[1]]
         })
-        renderWithSession(<MyProfile />, {
+        renderWithSession(<Profile />, {
             user: {
                 id: "23"
             }
@@ -136,7 +136,7 @@ describe("Fetch posts for user profile page tests", () => {
 
     it("Should render loading text until fetch posts api call completes", async () => {
         const serviceSpy = jest.spyOn(UserService, "getPostsByUser").mockRejectedValue(new Error("error"))
-        renderWithSession(<MyProfile />, {
+        renderWithSession(<Profile />, {
             user: {
                 id: "23"
             }
@@ -159,7 +159,7 @@ describe("Fetch posts for user profile page tests", () => {
             creator: getMockCreator("23"),
             posts: [mockPostsResponse[1]]
         })
-        renderWithSession(<MyProfile />, {
+        renderWithSession(<Profile />, {
             user: {
                 id: "23"
             }
@@ -195,7 +195,7 @@ describe("No posts available for user profile tests", () => {
             creator: getMockCreator("23"),
             posts: []
         })
-        renderWithSession(<MyProfile />, {
+        renderWithSession(<Profile />, {
             user: {
                 id: "23"
             }
@@ -213,7 +213,7 @@ describe("No posts available for user profile tests", () => {
             creator: getMockCreator("23"),
             posts: []
         })
-        renderWithSession(<MyProfile />, {
+        renderWithSession(<Profile />, {
             user: {
                 id: "7"
             }
