@@ -45,3 +45,5 @@ The redirection url after successful authentication
 A 64 bit secret generated for next auth. Command to create it -> openssl rand -base64 32 
 6. NEXTAUTH_SECRET
 
+
+
