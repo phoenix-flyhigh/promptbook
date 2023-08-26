@@ -2,11 +2,11 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
-import SignInSetup from "./SignInSetup";
 import { UserDetailsFromSession } from "@/utils/AuthUtil";
 import ThemeSwitcher from "../ThemeSwitcher";
+import { useRouter } from "next/navigation";
 
 interface NavBarViewProps {
     isUserLoggedIn: UserDetailsFromSession
@@ -15,8 +15,9 @@ interface NavBarViewProps {
 const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
     isUserLoggedIn
 }: NavBarViewProps) => {
-    const {data: session} : any = useSession();
+    const { data: session }: any = useSession();
     const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
+    const router = useRouter();
 
     return (
         <nav className="flex-between w-full mb-16 pt-3">
@@ -75,7 +76,14 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                                     </div>
                                 )}
                         </div>
-                    ) : <SignInSetup />
+                    ) : <>
+                        <button
+                            type="button"
+                            className="black_btn"
+                            onClick={() => signIn('google')}>
+                            Sign In
+                        </button>
+                    </>
             }
         </nav>
     )

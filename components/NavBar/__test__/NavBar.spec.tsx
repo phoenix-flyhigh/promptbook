@@ -18,6 +18,18 @@ Object.defineProperty(window, 'matchMedia', {
     })),
 });
 
+jest.mock("next/navigation", () => {
+    const actual = jest.requireActual("next/navigation");
+    return {
+        ...actual,
+        useRouter: jest.fn().mockImplementation(() => ({
+            push: jest.fn()
+        })),
+        usePathname: jest.fn().mockReturnValue("/")
+    };
+});
+
+
 const openProfileMenu = () => {
     const profileIcon: HTMLImageElement = screen.getByTestId("tid-profile-icon-mobile");
     fireEvent.click(profileIcon);
@@ -101,5 +113,14 @@ describe("NavBar component tests for signedIn users", () => {
 
         expect(screen.getByText("Switch to Dark Theme")).toBeInTheDocument();
         expect(screen.queryByText("Switch to Light Theme")).not.toBeInTheDocument();
+    })
+})
+
+
+describe("NavBar component tests for not logged in users", () => {
+    it("Should render the sign in button", () => {
+        renderWithSession(<NavBar />,null)
+
+        expect(screen.getByRole("button", {name: "Sign In"})).toBeInTheDocument()
     })
 })

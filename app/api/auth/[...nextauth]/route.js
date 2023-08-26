@@ -1,13 +1,50 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import User from "@/models/user";
+import UserAccount from "@/models/userAccount";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { connectToDB } from '@/utils/database';
+import bcrypt from "bcrypt";
 
 const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
+      name: 'credentials',
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" },
+        username: { label: "Username", type: "text", placeholder: "John Smith" },
+      },
+      async authorize(credentials) {
+        if (credentials) {
+          await connectToDB();
+
+          if (!credentials.email || !credentials.password) {
+            throw new Error('Please enter an email and password')
+          }
+          // check to see if user exists
+          const user = await UserAccount.findOne({
+            email: credentials.email
+          });
+          // if no user was found 
+          if (!user || !user?.hashedPassword) {
+            throw new Error('No user found')
+          }
+          // check to see if password matches
+          const passwordMatch = await bcrypt.compare(credentials.password, user.hashedPassword)
+
+          // if password does not match
+          if (!passwordMatch) {
+            throw new Error('Incorrect password')
+          }
+
+          return user;
+        }
+      }
     })
   ],
   callbacks: {
@@ -19,12 +56,16 @@ const handler = NextAuth({
     },
     async signIn({ account, profile, user, credentials }) {
       try {
+        if (credentials) {
+          return true
+        }
+        
         await connectToDB();
 
-        const userExists = await User.findOne({ email: profile.email });
+        const userExists = await UserAccount.findOne({ email: profile.email });
 
         if (!userExists) {
-          await User.create({
+          await UserAccount.create({
             email: profile.email,
             username: profile.name.replace(" ", "").toLowerCase(),
             image: profile.picture,
@@ -36,7 +77,7 @@ const handler = NextAuth({
         console.log("Error checking if user exists: ", error.message);
         return false
       }
-    },
+    }
   }
 })
 
