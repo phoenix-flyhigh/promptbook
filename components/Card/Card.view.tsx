@@ -6,6 +6,7 @@ import { Post } from "@/utils/PromptService";
 import { UserDetailsFromSession } from "@/utils/AuthUtil";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import formatTimeAgo from "@/utils/FormatTimestamp";
 
 interface CardViewProps {
     post: Post,
@@ -93,9 +94,11 @@ const CardView = ({
                     </button>
                 </div>
             )}
-            <div className="text-sm mt-2 dark:text-slate-500 text-zinc-500">
-                {`${post.timeStamp} ago`}
+            {post.timeStamp &&
+                <div className="text-sm mt-2 dark:text-slate-500 text-zinc-500">
+                    {formatTimeAgo(post.timeStamp)}
             </div>
+}
         </div>
     );
 };

@@ -18,13 +18,19 @@ jest.mock("next/navigation", () => {
 
 describe("Card component tests", () => {
     beforeEach(() => {
-        jest.clearAllMocks();
         Object.assign(navigator, {
             clipboard: {
                 writeText: jest.fn(),
             },
         });
+        Date.now = jest.fn(() => new Date("Thu Sept 7 2023 12:00:20").getTime())
+
         renderWithSession(<Card post={mockPostsResponse[0]} handleTagClick={() => { }} />)
+    })
+
+    afterEach(() => {
+        jest.clearAllMocks();
+        jest.clearAllTimers();
     })
 
     it("Should render the card component", () => {
@@ -32,7 +38,7 @@ describe("Card component tests", () => {
         const username = screen.getByText("s")
         const prompt = screen.getByText("This is a prompt")
         const tag = screen.getByText("#software")
-        const timeStamp = screen.getByText("Thu Sep 07 2023 00:00:00 GMT+0530 (India Standard Time) ago")
+        const timeStamp = screen.getByText("12 hours ago")
         const copyIcon = screen.getByAltText("copy_icon")
 
         expect(userImage).toBeInTheDocument()
