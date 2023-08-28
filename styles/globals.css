@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
-
+@import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -89,7 +89,7 @@
 }
 
 .desc {
-  @apply mt-5 text-lg text-gray-600 sm:text-xl max-w-2xl dark:text-violet-400;
+  @apply mt-5 text-lg text-gray-600 sm:text-xl max-w-2xl dark:text-slate-400;
 }
 
 .search_input {

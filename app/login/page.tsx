@@ -85,7 +85,7 @@ const Login = () => {
 
     return (
         <div className="flex flex-col gap-4 justify-center items-center w-72">
-            <span>
+            <span className="text-xl font-bold dark:text-blue-400 text-blue-900">
                 Login to Promptbook
             </span>
             <form onSubmit={handleSubmit} className="space-y-6">

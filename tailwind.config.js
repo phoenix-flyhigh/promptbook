@@ -11,6 +11,7 @@ module.exports = {
       fontFamily: {
         satoshi: ['Satoshi', 'sans-serif'],
         inter: ['Inter', 'sans-serif'],
+        sedgwick: ['Sedgwick Ave Display', 'sans-seri']
       },
       colors: {
         'primary-orange': '#FF5722',

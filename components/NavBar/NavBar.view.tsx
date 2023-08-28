@@ -21,14 +21,9 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
 
     return (
         <nav className="flex-between w-full mb-16 pt-3">
-            <Link href="/" className="flex gap-2 flex-center" data-testid="tid-app-logo">
-                <Image
-                    src="/images/logo.svg"
-                    alt="Promptbook logo"
-                    width={30}
-                    height={30}
-                    className="object-contain"
-                />
+            <Link href="/" className="flex gap-2 flex-center pt-3" data-testid="tid-app-logo">
+                <div className="font-sedgwick text-3xl">Promptbook</div>
+
             </Link>
             {
                 isUserLoggedIn ?
