@@ -80,7 +80,7 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                         <button
                             type="button"
                             className="black_btn"
-                            onClick={() => signIn('google')}>
+                            onClick={() => router.push("/login")}>
                             Sign In
                         </button>
                     </>

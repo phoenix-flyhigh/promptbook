@@ -17,13 +17,14 @@ Object.defineProperty(window, 'matchMedia', {
         dispatchEvent: jest.fn(),
     })),
 });
+const routerSpy = jest.fn();
 
 jest.mock("next/navigation", () => {
     const actual = jest.requireActual("next/navigation");
     return {
         ...actual,
         useRouter: jest.fn().mockImplementation(() => ({
-            push: jest.fn()
+            push: routerSpy
         })),
         usePathname: jest.fn().mockReturnValue("/")
     };
@@ -89,7 +90,7 @@ describe("NavBar component tests for signedIn users", () => {
         const themeButton: HTMLElement = screen.getByText("Switch to Dark Theme");
         fireEvent.click(themeButton)
         openProfileMenu()
-        
+
         expect(screen.getByText("Switch to Light Theme")).toBeInTheDocument();
         expect(screen.queryByText("Switch to Dark Theme")).not.toBeInTheDocument();
     })
@@ -118,9 +119,15 @@ describe("NavBar component tests for signedIn users", () => {
 
 
 describe("NavBar component tests for not logged in users", () => {
+    beforeEach(() => jest.clearAllMocks())
+    
     it("Should render the sign in button", () => {
-        renderWithSession(<NavBar />,null)
+        renderWithSession(<NavBar />, null)
+        const signInBtn = screen.getByRole("button", { name: "Sign In" });
 
-        expect(screen.getByRole("button", {name: "Sign In"})).toBeInTheDocument()
+        expect(signInBtn).toBeInTheDocument()
+        fireEvent.click(signInBtn)
+
+        expect(routerSpy).toHaveBeenCalledWith("/login")
     })
 })
