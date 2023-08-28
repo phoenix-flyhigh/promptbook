@@ -92,13 +92,13 @@ describe("Login page tests for logged in users", () => {
 
         fireEvent.click(loginBtn)
 
-        expect(screen.getByText("Invalid Password")).toBeInTheDocument();
+        expect(screen.getByText("Invalid Password. Password length must be 7-20 characters")).toBeInTheDocument();
 
         fireEvent.change(passwordBox, { target: { value: '2412412454' } })
 
         fireEvent.click(loginBtn)
 
-        expect(screen.queryByText("Invalid Password")).not.toBeInTheDocument();
+        expect(screen.queryByText("Invalid Password. Password length must be 7-20 characters")).not.toBeInTheDocument();
 
         await waitFor(() => {
             expect(routerSpy).toHaveBeenCalledWith("/")

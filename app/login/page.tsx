@@ -48,10 +48,10 @@ const Login = () => {
 
         const passwordLength = data.password.length
 
-        if (passwordLength < 8 || passwordLength > 20) {
+        if (passwordLength < 7 || passwordLength > 20) {
             setDataError(prev => ({
                 ...prev,
-                password: "Invalid Password"
+                password: "Invalid Password. Password length must be 7-20 characters"
             }))
             return
         }
