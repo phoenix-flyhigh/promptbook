@@ -29,7 +29,8 @@ describe("Feed component tests", () => {
         expect(screen.getByTestId("tid-search-input")).toBeInTheDocument()
     })
 
-    it("Should render all posts when search text is empty", async () => {
+    it(`Should render all posts in order of latest posted 
+        first when search text is empty`, async () => {
         expect(screen.getAllByTestId("tid-prompt-card").length).toBe(2)
         expect(screen.getByText("This is a prompt")).toBeInTheDocument()
         expect(screen.getByText("First post")).toBeInTheDocument()

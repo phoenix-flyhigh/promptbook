@@ -56,6 +56,7 @@ export const PATCH = async (
 
         existingPrompt.prompt = prompt;
         existingPrompt.tag = tag;
+        existingPrompt.timeStamp = Date.now();
 
         await existingPrompt.save();
 

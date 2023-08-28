@@ -38,7 +38,7 @@ describe("Card component tests", () => {
         const username = screen.getByText("s")
         const prompt = screen.getByText("This is a prompt")
         const tag = screen.getByText("#software")
-        const timeStamp = screen.getByText("12 hours ago")
+        const timeStamp = screen.getByText("1 second ago")
         const copyIcon = screen.getByAltText("copy_icon")
 
         expect(userImage).toBeInTheDocument()

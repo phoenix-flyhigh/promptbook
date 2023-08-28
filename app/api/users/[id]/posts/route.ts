@@ -22,7 +22,9 @@ export const GET = async (req: any, { params }: ParamsType) => {
 
         const posts = await Post.find({
             creator: params.id
-        }).populate('creator');
+        })
+        .sort({timeStamp: -1})
+        .populate('creator');
 
         const creator = await User.findById(params.id)
 

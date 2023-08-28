@@ -20,7 +20,7 @@ export const POST = async (req: any) => {
 
     try {
         await connectToDB();
-        const newPrompt = new Post({ creator: userId, prompt, tag });
+        const newPrompt = new Post({ creator: userId, prompt, tag, timeStamp: Date.now() });
         await newPrompt.save();
         return new Response(JSON.stringify(newPrompt), { status: 201 })
     }

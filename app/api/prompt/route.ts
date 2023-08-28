@@ -6,7 +6,7 @@ export const revalidate = 0
 export const GET = async () => {
     try {
         await connectToDB();
-        const prompts = await Post.find({}).populate('creator')
+        const prompts = await Post.find({}).sort({timeStamp: -1}).populate('creator')
         return new Response(JSON.stringify(prompts), {
             status: 200
         })
