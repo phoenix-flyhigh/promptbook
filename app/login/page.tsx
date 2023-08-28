@@ -10,7 +10,7 @@ interface FormData {
 
 const Login = () => {
     const router = useRouter()
-    const { data: session }: any = useSession()
+    const { data: session, status }: any = useSession()
 
     const [data, setData] = useState<FormData>({
         email: "",
@@ -37,19 +37,16 @@ const Login = () => {
     }
 
     useEffect(() => {
-        if (session?.status === 'authenticated') {
+        if (status === 'authenticated') {
             router.push('/')
         }
-    }, [])
+    })
 
     const handleSubmit = (e: any) => {
         e.preventDefault()
         setLoginError(false)
-        console.log("entered submit fn");
 
         const passwordLength = data.password.length
-
-        console.log(passwordLength);
 
         if (passwordLength < 8 || passwordLength > 20) {
             setDataError(prev => ({
@@ -129,13 +126,29 @@ const Login = () => {
                 >
                     Log in
                 </button>
-                {loginError ?
-                    <span className="flex w-full justify-center px-3 py-1.5 text-md font-semibold leading-6 text-red-400 shadow-sm">
-                        Failed to login. Please try again!
-                    </span>
-                    : <></>
-                }
+                <div className=" flex items-center justify-center dark:text-blue-300 text-blue-800 text-md">
+                    OR
+                </div>
             </form>
+            <div
+                className="flex items-center justify-center dark:text-red-400 text-red-600 text-lg hover:cursor-pointer"
+            >
+                <button
+                    onClick={(e: any) => {
+                        e.preventDefault()
+                        signIn('google')
+                    }}
+                >
+                    Log in with Google
+                </button>
+            </div>
+            <br />
+            {loginError ?
+                <span className="flex w-full justify-center px-3 py-1.5 text-md font-semibold leading-6 text-red-400 shadow-sm">
+                    Failed to login. Please try again!
+                </span>
+                : <></>
+            }
         </div>
     )
 }

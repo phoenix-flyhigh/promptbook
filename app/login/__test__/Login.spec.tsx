@@ -35,11 +35,17 @@ describe("Login page tests", () => {
         const emailBox = screen.getByPlaceholderText("Enter your email or username")
         const passwordBox = screen.getByPlaceholderText("Enter your password")
         const loginBtn = screen.getByRole("button", { name: "Log in" })
-
+        
         expect(screen.getByText("Login to Promptbook")).toBeInTheDocument();
         expect(emailBox).toBeInTheDocument()
         expect(passwordBox).toBeInTheDocument()
         expect(loginBtn).toBeInTheDocument()
+    })
+    
+    it("Should render google login option",() => {
+        const googleLoginBtn = screen.getByText("Log in with Google")
+
+        expect(googleLoginBtn).toBeInTheDocument();
     })
 
     it("Should disable log in button until both email and password is entered and valid", () => {
