@@ -1,4 +1,4 @@
-import Prompt from "@/models/prompt";
+import Post from "@/models/post";
 import { connectToDB } from "@/utils/database"
 import { getServerSession } from "next-auth/next";
 
@@ -14,7 +14,7 @@ export const GET = async (req: any, { params }: {
 
     try {
         await connectToDB();
-        const prompt = await Prompt.findById(params.id).populate('creator');
+        const prompt = await Post.findById(params.id).populate('creator');
 
         if (!prompt)
             return new Response("Prompt not found", {
@@ -47,7 +47,7 @@ export const PATCH = async (
     try {
         await connectToDB();
 
-        const existingPrompt = await Prompt.findById(params.id).populate("creator")
+        const existingPrompt = await Post.findById(params.id).populate("creator")
 
         if (!existingPrompt)
             return new Response("Prompt not found", {
@@ -81,7 +81,7 @@ export const DELETE = async (req: any, { params }: {
     try {
         await connectToDB();
 
-        await Prompt.findByIdAndRemove(params.id)
+        await Post.findByIdAndRemove(params.id)
         return new Response("Deleted post successfully", {
             status: 200
         })

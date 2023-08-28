@@ -1,4 +1,4 @@
-import Prompt from "@/models/prompt";
+import Post from "@/models/post";
 import User from "@/models/user";
 import { connectToDB } from "@/utils/database"
 import { getServerSession } from "next-auth/next";
@@ -20,7 +20,7 @@ export const GET = async (req: any, { params }: ParamsType) => {
     try {
         await connectToDB();
 
-        const posts = await Prompt.find({
+        const posts = await Post.find({
             creator: params.id
         }).populate('creator');
 

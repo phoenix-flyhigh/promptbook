@@ -50,12 +50,9 @@ const CardView = ({
                     />
 
                     <div className='flex flex-col'>
-                        <h3 className='font-satoshi font-semibold text-gray-900 dark:text-stone-400'>
+                        <h3 className='font-satoshi font-semibold text-gray-900 dark:text-stone-200'>
                             {post.creator.username}
                         </h3>
-                        <p className='font-inter text-sm text-gray-500'>
-                            {post.creator.email}
-                        </p>
                     </div>
                 </div>
 
@@ -73,9 +70,9 @@ const CardView = ({
                 </div>
             </div>
 
-            <p className='my-4 font-satoshi text-sm text-gray-700 dark:text-slate-100'>{post.prompt}</p>
+            <p className='my-4 font-satoshi text-lg text-gray-700 dark:text-slate-100'>{post.prompt}</p>
             <p
-                className='font-inter text-sm blue_gradient cursor-pointer dark:text-blue-400'
+                className='font-inter text-md blue_gradient cursor-pointer dark:text-blue-400'
                 onClick={() => handleTagClick && handleTagClick(post.tag)}
             >
                 {post.tag}
@@ -96,6 +93,9 @@ const CardView = ({
                     </button>
                 </div>
             )}
+            <div className="text-sm mt-2 dark:text-slate-500 text-zinc-500">
+                {`${post.timeStamp} ago`}
+            </div>
         </div>
     );
 };

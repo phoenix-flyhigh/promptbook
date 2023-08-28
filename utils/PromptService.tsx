@@ -12,7 +12,8 @@ export interface Post {
     creator: User,
     prompt: string,
     _id: string,
-    tag: string
+    tag: string,
+    timeStamp?: Date
 }
 
 interface IPromptService {

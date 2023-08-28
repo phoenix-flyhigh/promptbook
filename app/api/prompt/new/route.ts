@@ -1,4 +1,4 @@
-import Prompt from "@/models/prompt";
+import Post from "@/models/post";
 import { connectToDB } from "@/utils/database";
 import { getServerSession } from "next-auth";
 
@@ -20,7 +20,7 @@ export const POST = async (req: any) => {
 
     try {
         await connectToDB();
-        const newPrompt = new Prompt({ creator: userId, prompt, tag });
+        const newPrompt = new Post({ creator: userId, prompt, tag });
         await newPrompt.save();
         return new Response(JSON.stringify(newPrompt), { status: 201 })
     }

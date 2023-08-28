@@ -30,16 +30,16 @@ describe("Card component tests", () => {
     it("Should render the card component", () => {
         const userImage = screen.getByAltText("user_image")
         const username = screen.getByText("s")
-        const email = screen.getByText("123@gmail.com")
         const prompt = screen.getByText("This is a prompt")
         const tag = screen.getByText("#software")
+        const timeStamp = screen.getByText("Thu Sep 07 2023 00:00:00 GMT+0530 (India Standard Time) ago")
         const copyIcon = screen.getByAltText("copy_icon")
 
         expect(userImage).toBeInTheDocument()
         expect(username).toBeInTheDocument()
-        expect(email).toBeInTheDocument()
         expect(prompt).toBeInTheDocument()
         expect(tag).toBeInTheDocument()
+        expect(timeStamp).toBeInTheDocument()
         expect(copyIcon).toBeInTheDocument()
     })
 
