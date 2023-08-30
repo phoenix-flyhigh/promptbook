@@ -16,7 +16,7 @@ module.exports = {
       colors: {
         'primary-orange': '#FF5722',
         'dark-background': '#121212',
-        'light-background':'rgb(191 219 254)',
+        'light-background':'rgb(219 234 254)',
         'light-mini-background':'rgb(224 231 255)',
         'dark-title': '#a0c4ff',
         'light-title': '#000',

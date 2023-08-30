@@ -51,7 +51,7 @@ const CardView = ({
                     />
 
                     <div className='flex flex-col'>
-                        <h3 className='font-satoshi font-semibold text-gray-900 dark:text-stone-200'>
+                        <h3 className='font-satoshi font-semibold text-gray-900 hover:text-blue-600 dark:hover:text-blue-400 dark:text-stone-200'>
                             {post.creator.username}
                         </h3>
                     </div>
@@ -70,24 +70,25 @@ const CardView = ({
                     />
                 </div>
             </div>
-
-            <p className='my-4 font-satoshi text-lg text-gray-700 dark:text-slate-100'>{post.prompt}</p>
-            <p
-                className='font-inter text-md blue_gradient cursor-pointer dark:text-blue-400'
-                onClick={() => handleTagClick && handleTagClick(post.tag)}
-            >
-                {post.tag}
-            </p>
+            <div className="bg-gray-200 rounded-lg px-1 my-4 py-2 dark:bg-slate-800">
+                <p className='font-satoshi text-lg text-gray-700 dark:text-slate-300 mb-4'>{post.prompt}</p>
+                <p
+                    className='font-inter text-md blue_gradient cursor-pointer dark:text-blue-400'
+                    onClick={() => handleTagClick && handleTagClick(post.tag)}
+                >
+                    {post.tag}
+                </p>
+            </div>
             {user?.id === post.creator._id && pathName.startsWith("/profile") && (
-                <div className='mt-5 flex-end gap-4 border-t border-gray-100 pt-3'>
+                <div className='mt-5 flex-end gap-4 pt-3'>
                     <button
-                        className='font-inter text-sm green_gradient cursor-pointer'
+                        className='font-inter text-md font-bold text-green-600 cursor-pointer'
                         onClick={handleEdit ? () => handleEdit(post) : () => { }}
                     >
                         Edit
                     </button>
                     <button
-                        className='font-inter text-sm orange_gradient cursor-pointer'
+                        className='font-inter text-md font-bold text-red-600 cursor-pointer'
                         onClick={handleDelete ? () => handleDelete(post) : () => { }}
                     >
                         Delete
@@ -97,8 +98,8 @@ const CardView = ({
             {post.timeStamp &&
                 <div className="text-sm mt-2 dark:text-slate-500 text-zinc-500">
                     {formatTimeAgo(post.timeStamp)}
-            </div>
-}
+                </div>
+            }
         </div>
     );
 };
