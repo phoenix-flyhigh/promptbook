@@ -97,6 +97,26 @@ describe("Posted ago time in card tests", () => {
         expect(screen.getByText("7 hours ago")).toBeInTheDocument()
     })
 
+    it("Should render card with time stamp in day ago", () => {
+        renderWithSession(
+            <Card
+                post={getPostWithGivenTimestamp("Thu Sept 6 2023 05:00:00")}
+                handleTagClick={() => { }}
+            />)
+
+        expect(screen.getByText("1 day ago")).toBeInTheDocument()
+    })
+
+    it("Should render card with time stamp in days ago", () => {
+        renderWithSession(
+            <Card
+                post={getPostWithGivenTimestamp("Thu Sept 4 2023 05:00:00")}
+                handleTagClick={() => { }}
+            />)
+
+        expect(screen.getByText("3 days ago")).toBeInTheDocument()
+    })
+
     it(`Should render card with time stamp with day and month, 
         not year if posted year is same as current year`, () => {
         renderWithSession(

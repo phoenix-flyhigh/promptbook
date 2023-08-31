@@ -44,6 +44,23 @@ describe("Show more and show less functionality tests", () => {
         expect(screen.getByRole("button", { name: "Show more" })).toBeInTheDocument();
     })
 
+    it(`Should render show more button even if wordCount is less than specified number
+        but total prompt length is greater than 250 characters`, () => {
+        const expectedText = `Thisisarandomtextthathasbeenaddedbyuser Thisisarandomtextthathasbeenaddedbyuser Thisisarandomtextthathasbeenaddedbyuser Thisisarandomtextthathasbeenaddedbyuser Thisisarandomtextthathasbeenaddedbyuser`
+        
+        renderWithSession(
+            <Card
+                post={{
+                    ...mockPostsResponse[0],
+                    prompt: "Thisisarandomtextthathasbeenaddedbyuser Thisisarandomtextthathasbeenaddedbyuser Thisisarandomtextthathasbeenaddedbyuser Thisisarandomtextthathasbeenaddedbyuser Thisisarandomtextthathasbeenaddedbyuser Thisisarandomtextthathasbeenaddedbyuser Thisisarandomtextthathasbeenaddedbyuser"
+                }}
+                handleTagClick={() => { }}
+            />)
+
+        expect(screen.getByText(expectedText)).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Show more" })).toBeInTheDocument();
+    })
+
     it(`Should render entire text and show less button when user 
         clicks on show more button`, () => {
         renderWithSession(
