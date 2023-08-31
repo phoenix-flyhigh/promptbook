@@ -66,8 +66,8 @@ const EditPrompt = () => {
 
         try {
             await PromptService.updatePrompt(post._id, {
-                prompt: post.prompt,
-                tag: post.tag,
+                prompt: post.prompt.trim(),
+                tag: post.tag.trim(),
             })
             router.push(`/profile?id=${session?.user.id}`);
         }

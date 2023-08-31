@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import Image from "next/image";
 import { Post } from "@/utils/PromptService";
 import { UserDetailsFromSession } from "@/utils/AuthUtil";
@@ -12,14 +12,20 @@ interface CardViewProps {
     post: Post,
     handleTagClick?: (tagName: string) => void,
     handleEdit?: (post: Post) => void,
-    handleDelete?: (post: Post) => void
+    handleDelete?: (post: Post) => void,
+    truncatedText: string,
+    showTruncatedContent: boolean,
+    setShowTruncatedContent: Dispatch<SetStateAction<boolean>>
 }
 
 const CardView = ({
     post,
     handleTagClick,
     handleEdit,
-    handleDelete
+    handleDelete,
+    truncatedText,
+    showTruncatedContent,
+    setShowTruncatedContent
 }: CardViewProps) => {
 
     const { data: session } = useSession();
@@ -71,7 +77,27 @@ const CardView = ({
                 </div>
             </div>
             <div className="bg-gray-200 rounded-lg px-1 my-4 py-2 dark:bg-slate-800">
-                <p className='font-satoshi text-lg text-gray-700 dark:text-slate-300 mb-4'>{post.prompt}</p>
+                <p className='font-satoshi text-lg text-gray-700 dark:text-slate-300 mb-4'>
+                    {showTruncatedContent &&
+                        <>
+                            {truncatedText} <button
+                                className="text-blue-500"
+                                onClick={() => setShowTruncatedContent(prev => !prev)}
+                            >
+                                Show more
+                            </button>
+                        </>}
+                    {!showTruncatedContent && truncatedText &&
+                        <>
+                            {post.prompt} <button
+                                className="text-blue-500"
+                                onClick={() => setShowTruncatedContent(prev => !prev)}
+                            >
+                                Show less
+                            </button>
+                        </>}
+                    {!showTruncatedContent && !truncatedText && post.prompt}
+                </p>
                 <p
                     className='font-inter text-md blue_gradient cursor-pointer dark:text-blue-400'
                     onClick={() => handleTagClick && handleTagClick(post.tag)}

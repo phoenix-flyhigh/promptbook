@@ -39,9 +39,9 @@ const CreatePost = () => {
 
     try {
       await PromptService.postPrompt({
-        prompt: post.prompt,
+        prompt: post.prompt.trim(),
         userId: session?.user.id,
-        tag: post.tag,
+        tag: post.tag.trim(),
       })
       router.push("/");
     }
