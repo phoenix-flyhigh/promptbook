@@ -135,7 +135,7 @@ const Login = () => {
                         />
                         {data.password.length ?
                             <button
-                                className='absolute top-1/2 transform -translate-y-1/2 right-10'
+                                className='absolute top-1/2 transform -translate-y-1/2 right-4'
                                 onClick={() => setShowPassword(prev => !prev)}
                             >
                                 {showPassword ? 'Hide' : 'Show'}
