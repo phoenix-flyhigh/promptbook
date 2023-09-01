@@ -8,9 +8,14 @@ interface FormData {
     password: string
 }
 
+interface LoggingInProgress {
+    email: boolean;
+    google: boolean;
+}
+
 const Login = () => {
     const router = useRouter()
-    const { data: session, status }: any = useSession()
+    const { status }: any = useSession()
 
     const [data, setData] = useState<FormData>({
         email: "",
@@ -23,6 +28,12 @@ const Login = () => {
     })
 
     const [loginError, setLoginError] = useState<boolean>(false)
+    const [showPassword, setShowPassword] = useState<boolean>(false)
+
+    const [loggingInProgess, setLoggingInProgess] = useState<LoggingInProgress>({
+        email: false,
+        google: false
+    })
 
     const handleChange = (e: any) => {
         setDataError(prev => ({
@@ -55,12 +66,20 @@ const Login = () => {
             }))
             return
         }
+        setLoggingInProgess(prev => ({
+            ...prev,
+            email: true
+        }))
 
         signIn('credentials',
             {
                 ...data, redirect: false
             })
             .then((callback) => {
+                setLoggingInProgess(prev => ({
+                    ...prev,
+                    email: false
+                }))
                 if (callback?.error) {
                     if (callback?.error === "No user found") {
                         setDataError(prev => ({
@@ -83,72 +102,114 @@ const Login = () => {
             })
     }
 
+    const isLoginButtonDisabled = !(data.email && data.password)
+
     return (
         <div className='grid place-items-center h-screen'>
-        <div className="flex flex-col gap-4 justify-center items-center w-96 shadow-xl border-slate-300 border-2 rounded-lg p-8 dark:shadow-stone-400/40 dark:border-stone-400">
+            <div className="flex flex-col gap-4 justify-center items-center w-96 shadow-xl border-slate-300 border-2 rounded-lg p-8 dark:shadow-stone-400/40 dark:border-stone-400">
                 <div className="font-sedgwick text-3xl my-4">Promptbook</div>
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <input
-                    className="px-3 py-1.5 w-full"
-                    name="email"
-                    id="email"
-                    value={data.email}
-                    placeholder="Enter your email or username"
-                    onChange={handleChange}
-                />
-                {dataError.email ?
-                    <span className="font-semibold text-red-400">
-                        {dataError.email}
-                    </span>
-                    : <></>
-                }
+                <form onSubmit={handleSubmit} className="space-y-6 w-full">
+                    <input
+                        className="px-3 py-1.5 w-full"
+                        name="email"
+                        id="email"
+                        value={data.email}
+                        placeholder="Enter your email or username"
+                        onChange={handleChange}
+                    />
+                    {dataError.email ?
+                        <span className="font-semibold text-red-400">
+                            {dataError.email}
+                        </span>
+                        : <></>
+                    }
+                    <div className='relative'>
+                        <input
+                            className="px-3 py-1.5 w-full pr-8"
+                            name="password"
+                            id="password"
+                            value={data.password}
+                            placeholder="Enter your password"
+                            onChange={handleChange}
+                            type={showPassword ? 'text' : 'password'}
+                        />
+                        {data.password.length ?
+                            <button
+                                className='absolute top-1/2 transform -translate-y-1/2 right-10'
+                                onClick={() => setShowPassword(prev => !prev)}
+                            >
+                                {showPassword ? 'Hide' : 'Show'}
+                            </button>
+                            :
+                            null
+                        }
+                    </div>
+                    {dataError.password ?
+                        <span className="font-semibold text-red-400">
+                            {dataError.password}
+                        </span>
+                        : <></>
+                    }
 
-                <input
-                    className="px-3 py-1.5 w-full"
-                    name="password"
-                    id="password"
-                    value={data.password}
-                    placeholder="Enter your password"
-                    onChange={handleChange}
-                />
-                {dataError.password ?
-                    <span className="font-semibold text-red-400">
-                        {dataError.password}
-                    </span>
-                    : <></>
-                }
-
-                <button
-                    className="flex w-full justify-center rounded-xl bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                    type="submit"
-                    disabled={!(data.email && data.password)}
+                    <button
+                        className={`flex w-full justify-center rounded-xl ${isLoginButtonDisabled ? "bg-blue-500 opacity-40" : "bg-blue-500 opacity-100"} px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm ${!isLoginButtonDisabled && "hover:bg-blue-700 "}  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
+                        type="submit"
+                        disabled={isLoginButtonDisabled}
+                    >
+                        {loggingInProgess.email ? "Logging in" : "Log in"}
+                        {loggingInProgess.email ?
+                            <div
+                                data-testid="tid-spinner"
+                                className="animate-spin h-5 w-5 mr-3 ml-4 border-slate-100 rounded-full border-solid border-t-4">
+                            </div>
+                            : null
+                        }
+                    </button>
+                    <div className=" flex items-center justify-center dark:text-blue-300 text-blue-800 text-md">
+                        OR
+                    </div>
+                </form>
+                <div
+                    className="flex items-center justify-center dark:text-red-400 text-red-600 text-lg hover:cursor-pointer"
                 >
-                    Log in
-                </button>
-                <div className=" flex items-center justify-center dark:text-blue-300 text-blue-800 text-md">
-                    OR
+                    <button
+                        className='flex w-full justify-center items-center'
+                        onClick={(e: any) => {
+                            e.preventDefault()
+                            setLoggingInProgess(prev => ({
+                                ...prev,
+                                google: true
+                            }))
+                            signIn('google')
+                                .catch(() => {
+                                    setLoginError(true)
+                                })
+                                .finally(() => {
+                                    setLoggingInProgess(prev => ({
+                                        ...prev,
+                                        google: false
+                                    }))
+                                })
+                        }}
+                    >
+                        {loggingInProgess.google ? "Logging in with Google" : "Log in with Google"}
+                        {loggingInProgess.google ?
+                            <div
+                                data-testid="tid-spinner"
+                                className="animate-spin h-5 w-5 mr-3 ml-4 border-red-500 rounded-full border-2 border-t-4">
+                            </div>
+                            : null
+                        }
+                    </button>
                 </div>
-            </form>
-            <div
-                className="flex items-center justify-center dark:text-red-400 text-red-600 text-lg hover:cursor-pointer"
-            >
-                <button
-                    onClick={(e: any) => {
-                        e.preventDefault()
-                        signIn('google')
-                    }}
-                >
-                    Log in with Google
-                </button>
+                <br />
+                {loginError ?
+                    <span className="flex w-full justify-center px-3 py-1.5 text-md font-semibold leading-6 text-red-400 shadow-sm">
+                        Failed to login. Please try again!
+                    </span>
+                    : <></>
+                }
             </div>
-            <br />
-            {loginError ?
-                <span className="flex w-full justify-center px-3 py-1.5 text-md font-semibold leading-6 text-red-400 shadow-sm">
-                    Failed to login. Please try again!
-                </span>
-                : <></>
-            }
-        </div>
         </div>
     )
 }

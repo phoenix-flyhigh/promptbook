@@ -29,7 +29,9 @@ describe("Failed login for invalid password test", () => {
         jest.clearAllMocks()
     })
 
-    it("Should show incorrect password message if password is incorrect", async () => {
+    it(`Should show incorrect password message if password is incorrect
+        and render logging in text in the button until the sign in 
+        call finishes and then display log in text in the button`, async () => {
         renderWithSession(<Login />, null)
 
         const emailBox = screen.getByPlaceholderText("Enter your email or username")
@@ -40,8 +42,12 @@ describe("Failed login for invalid password test", () => {
         fireEvent.change(passwordBox, { target: { value: '453453453' } })
 
         fireEvent.click(loginBtn)
+        expect(screen.getByRole("button", { name: "Logging in" })).toBeInTheDocument();
+
         await waitFor(() => {
             expect(screen.getByText("Incorrect password")).toBeInTheDocument();
+            expect(screen.queryByRole("button", { name: "Logging in" })).not.toBeInTheDocument();
+            expect(screen.getByRole("button", { name: "Log in" })).toBeInTheDocument();
         })
     })
 })

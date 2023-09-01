@@ -29,7 +29,9 @@ describe("Failed login for invalid user test", () => {
         jest.clearAllMocks()
     })
 
-    it("Should show invalid email text if no user found", async () => {
+    it(`Should show invalid email text if no user found and
+        render logging in text in the button until the sign in 
+        call finishes and then display log in text in the button`, async () => {
         renderWithSession(<Login />, null)
 
         const emailBox = screen.getByPlaceholderText("Enter your email or username")
@@ -40,8 +42,12 @@ describe("Failed login for invalid user test", () => {
         fireEvent.change(passwordBox, { target: { value: '453453453' } })
 
         fireEvent.click(loginBtn)
+        expect(screen.getByRole("button", { name: "Logging in" })).toBeInTheDocument();
+
         await waitFor(() => {
             expect(screen.getByText("Invalid email or username")).toBeInTheDocument();
+            expect(screen.queryByRole("button", { name: "Logging in" })).not.toBeInTheDocument();
+            expect(screen.getByRole("button", { name: "Log in" })).toBeInTheDocument();
         })
     })
 })
