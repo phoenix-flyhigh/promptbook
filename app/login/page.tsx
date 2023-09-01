@@ -181,6 +181,7 @@ const Login = () => {
                                 google: true
                             }))
                             signIn('google')
+                                .then(() => router.push('/'))
                                 .catch(() => {
                                     setLoginError(true)
                                 })

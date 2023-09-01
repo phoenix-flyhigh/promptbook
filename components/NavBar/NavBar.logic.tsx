@@ -5,7 +5,7 @@ import NavBarView from './NavBar.view'
 import { usePathname } from 'next/navigation';
 
 const NavBar: () => JSX.Element = () => {
-    const isUserLoggedIn: UserDetailsFromSession = AuthUtil.getUserFromSession();
+    const isUserLoggedIn: UserDetailsFromSession = AuthUtil.useUserFromSession();
     const pathname = usePathname();
     const isLoginPage = pathname === '/login';
 

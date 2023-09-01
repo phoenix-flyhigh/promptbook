@@ -1,5 +1,5 @@
 import Post from "@/models/post";
-import User from "@/models/user";
+import UserAccount from "@/models/userAccount";
 import { connectToDB } from "@/utils/database"
 import { getServerSession } from "next-auth/next";
 
@@ -26,7 +26,7 @@ export const GET = async (req: any, { params }: ParamsType) => {
         .sort({timeStamp: -1})
         .populate('creator');
 
-        const creator = await User.findById(params.id)
+        const creator = await UserAccount.findById(params.id)
 
         const response = {
             creator: creator,

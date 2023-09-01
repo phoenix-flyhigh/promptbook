@@ -84,6 +84,33 @@ describe("Card component tests", () => {
     })
 })
 
+describe("Profile image tests", () => {
+
+    it("Should render profile image of creator if it exists", () => {
+        renderWithSession(<Card post={mockPostsResponse[0]} handleTagClick={() => { }} />)
+        const img = screen.getByAltText("user_image")
+
+        expect(img.getAttribute('src')).toContain('logo.png')
+    })
+
+    it("Should render dummy profile icon if creator image doesn't exist", () => {
+        renderWithSession(
+            <Card
+                post={{
+                    ...mockPostsResponse[0],
+                    creator: {
+                        ...mockPostsResponse[0].creator,
+                        image: ""
+                    }
+                }}
+                handleTagClick={() => { }}
+            />)
+        const img = screen.getByAltText("user_image")
+
+        expect(img.getAttribute('src')).toBe('/icons/profile-icon.svg')
+    })
+})
+
 describe("Theme based icon tests", () => {
     beforeEach(() => {
         jest.clearAllMocks();

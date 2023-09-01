@@ -12,11 +12,11 @@ export type UserDetails = {
 }
 
 interface IAuthUtil {
-    getUserFromSession: () => UserDetailsFromSession;
+    useUserFromSession: () => UserDetailsFromSession;
 }
 
 const AuthUtil: IAuthUtil = {
-    getUserFromSession: () => {
+    useUserFromSession: () => {
         const {data: session} = useSession();
         
         return session?.user

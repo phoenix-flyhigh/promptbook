@@ -41,11 +41,10 @@ const CardView = ({
         setTimeout(() => setCopied(""), 3000);
     };
     const user: UserDetailsFromSession = session?.user;
-    console.log(theme);
-
     const copyIconPath = theme === "dark" ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg";
     const tickIconPath = theme === "dark" ? "/icons/tick-icon-dark.svg" : "/icons/tick-icon.svg";
 
+    const hasProfileImage = post.creator.image?.length
     return (
         <div className='prompt_card' data-testid="tid-prompt-card">
             <div className='flex justify-between items-start gap-5'>
@@ -55,11 +54,11 @@ const CardView = ({
                     onClick={() => router.push(`/profile?id=${post.creator._id}`)}
                 >
                     <Image
-                        src={post.creator.image}
+                        src={hasProfileImage ? post.creator.image : "/icons/profile-icon.svg"}
                         alt='user_image'
                         width={40}
                         height={40}
-                        className='rounded-full object-contain'
+                        className={`rounded-full object-contain ${!hasProfileImage && 'dark:bg-slate-200 p-[2px] bg-slate-300'}`}
                     />
 
                     <div className='flex flex-col'>

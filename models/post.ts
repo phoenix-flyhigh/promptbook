@@ -3,7 +3,7 @@ import { Schema, model, models } from 'mongoose';
 const PostSchema = new Schema({
   creator: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'UserAccount',
   },
   prompt: {
     type: String,
@@ -19,6 +19,6 @@ const PostSchema = new Schema({
   }
 });
 
-const Post = models.Post || model('Post', PostSchema);
+const Post = models.Posts || model('Posts', PostSchema);
 
 export default Post;

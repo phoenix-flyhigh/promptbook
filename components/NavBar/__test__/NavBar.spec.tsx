@@ -47,6 +47,32 @@ describe("NavBar component tests", () => {
 
         expect(screen.getByTestId("tid-app-logo")).toBeInTheDocument()
     })
+
+    it("Should render the profile logo of user", () => {
+        renderWithSession(<NavBar />, {
+            expires: "",
+            user: {
+                name: "s",
+                image: "/logo.png"
+            }
+        })
+        const img = screen.getByAltText("Profile photo")
+
+        expect(img.getAttribute('src')).toContain('logo.png')
+    })
+    
+    it("Should render the dummy profile icon if user image doesnt exist", () => {
+        renderWithSession(<NavBar />, {
+            expires: "",
+            user: {
+                name: "s",
+                image: ""
+            }
+        })
+        const img = screen.getByAltText("Profile photo")
+
+        expect(img.getAttribute('src')).toContain('/icons/profile-icon.svg')
+    })
 })
 
 describe("NavBar component tests for signedIn users", () => {
