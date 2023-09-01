@@ -2,8 +2,23 @@ import mockPostsResponse from "@/utils/TestData"
 import renderWithSession from "@/utils/TestUtil"
 import { fireEvent, screen } from "@testing-library/react"
 import Card from ".."
+import { ThemeProvider } from "next-themes"
 
 const routerSpy = jest.fn()
+
+Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(), // Deprecated
+        removeListener: jest.fn(), // Deprecated
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+    })),
+});
 
 jest.mock("next/navigation", () => {
     const actual = jest.requireActual("next/navigation");
@@ -66,6 +81,49 @@ describe("Card component tests", () => {
 
         expect(routerSpy).toHaveBeenCalledTimes(1)
         expect(routerSpy).toHaveBeenCalledWith('/profile?id=1')
+    })
+})
+
+describe("Theme based icon tests", () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: jest.fn(),
+            },
+        });
+    })
+
+    it("Should render light theme copy icon and tick when theme is light", () => {
+        renderWithSession(
+            <ThemeProvider attribute="class" defaultTheme="light">
+                <Card post={mockPostsResponse[0]} handleTagClick={() => { }} />
+            </ThemeProvider>
+        )
+        const copyIcon = screen.getByAltText("copy_icon")
+
+        expect(copyIcon.getAttribute('src')).toEqual("/icons/copy-icon.svg")
+
+        fireEvent.click(copyIcon);
+        const tickIcon = screen.getByAltText("tick_icon")
+
+        expect(tickIcon.getAttribute('src')).toEqual("/icons/tick-icon.svg")
+    })
+
+    it("Should render dark theme copy icon and tick when theme is dark", () => {
+        renderWithSession(
+            <ThemeProvider attribute="class" defaultTheme="dark">
+                <Card post={mockPostsResponse[0]} handleTagClick={() => { }} />
+            </ThemeProvider>
+        )
+        const copyIcon = screen.getByAltText("copy_icon")
+
+        expect(copyIcon.getAttribute('src')).toEqual("/icons/copy-icon-dark.svg")
+
+        fireEvent.click(copyIcon);
+        const tickIcon = screen.getByAltText("tick_icon")
+
+        expect(tickIcon.getAttribute('src')).toEqual("/icons/tick-icon-dark.svg")
     })
 })
 

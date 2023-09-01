@@ -3,7 +3,6 @@ import NavBar from "@/components/NavBar";
 import renderWithSession from "@/utils/TestUtil";
 import { ThemeProvider } from "next-themes";
 
-//TODO: tests for sign in button in desktop and mobile
 Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: jest.fn().mockImplementation(query => ({
@@ -97,7 +96,7 @@ describe("NavBar component tests for signedIn users", () => {
 
     it("Should change theme button title on changing theme from dark to light", async () => {
         renderWithSession(
-            <ThemeProvider attribute="class" forcedTheme="dark">
+            <ThemeProvider attribute="class" defaultTheme="dark">
                 <NavBar />
             </ThemeProvider>
             , {

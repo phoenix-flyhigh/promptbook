@@ -7,6 +7,7 @@ import { UserDetailsFromSession } from "@/utils/AuthUtil";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import formatTimeAgo from "@/utils/FormatTimestamp";
+import { useTheme } from "next-themes";
 
 interface CardViewProps {
     post: Post,
@@ -32,6 +33,7 @@ const CardView = ({
     const router = useRouter();
     const pathName = usePathname();
     const [copied, setCopied] = useState("");
+    const { theme } = useTheme();
 
     const handleCopy = () => {
         setCopied(post.prompt);
@@ -39,6 +41,10 @@ const CardView = ({
         setTimeout(() => setCopied(""), 3000);
     };
     const user: UserDetailsFromSession = session?.user;
+    console.log(theme);
+
+    const copyIconPath = theme === "dark" ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg";
+    const tickIconPath = theme === "dark" ? "/icons/tick-icon-dark.svg" : "/icons/tick-icon.svg";
 
     return (
         <div className='prompt_card' data-testid="tid-prompt-card">
@@ -65,14 +71,10 @@ const CardView = ({
 
                 <div className='copy_btn' onClick={handleCopy}>
                     <Image
-                        src={
-                            copied === post.prompt
-                                ? "/icons/tick.svg"
-                                : "/icons/copy.svg"
-                        }
+                        src={copied === post.prompt ? tickIconPath : copyIconPath}
                         alt={copied === post.prompt ? "tick_icon" : "copy_icon"}
-                        width={12}
-                        height={12}
+                        width={20}
+                        height={20}
                     />
                 </div>
             </div>
