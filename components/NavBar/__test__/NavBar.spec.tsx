@@ -1,4 +1,4 @@
-import { screen, fireEvent, waitFor } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import NavBar from "@/components/NavBar";
 import renderWithSession from "@/utils/TestUtil";
 import { ThemeProvider } from "next-themes";

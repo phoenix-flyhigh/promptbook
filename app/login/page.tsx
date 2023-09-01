@@ -84,10 +84,9 @@ const Login = () => {
     }
 
     return (
-        <div className="flex flex-col gap-4 justify-center items-center w-72">
-            <span className="text-xl font-bold dark:text-blue-400 text-blue-900">
-                Login to Promptbook
-            </span>
+        <div className='grid place-items-center h-screen'>
+        <div className="flex flex-col gap-4 justify-center items-center w-96 shadow-xl border-slate-300 border-2 rounded-lg p-8 dark:shadow-stone-400/40 dark:border-stone-400">
+                <div className="font-sedgwick text-3xl my-4">Promptbook</div>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <input
                     className="px-3 py-1.5 w-full"
@@ -120,7 +119,7 @@ const Login = () => {
                 }
 
                 <button
-                    className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                    className="flex w-full justify-center rounded-xl bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                     type="submit"
                     disabled={!(data.email && data.password)}
                 >
@@ -149,6 +148,7 @@ const Login = () => {
                 </span>
                 : <></>
             }
+        </div>
         </div>
     )
 }

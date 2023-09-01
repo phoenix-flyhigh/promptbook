@@ -36,7 +36,7 @@ describe("Login page tests", () => {
         const passwordBox = screen.getByPlaceholderText("Enter your password")
         const loginBtn = screen.getByRole("button", { name: "Log in" })
         
-        expect(screen.getByText("Login to Promptbook")).toBeInTheDocument();
+        expect(screen.getByText("Promptbook")).toBeInTheDocument();
         expect(emailBox).toBeInTheDocument()
         expect(passwordBox).toBeInTheDocument()
         expect(loginBtn).toBeInTheDocument()
