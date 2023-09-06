@@ -53,8 +53,7 @@ const Login = () => {
         }
     })
 
-    const handleSubmit = (e: any) => {
-        e.preventDefault()
+    const handleSubmit = () => {
         setLoginError(false)
 
         const passwordLength = data.password.length
@@ -108,7 +107,7 @@ const Login = () => {
         <div className='grid place-items-center h-screen'>
             <div className="flex flex-col gap-4 justify-center items-center w-96 shadow-xl border-slate-300 border-2 rounded-lg p-8 dark:shadow-stone-400/40 dark:border-stone-400">
                 <div className="font-sedgwick text-3xl my-4">Promptbook</div>
-                <form onSubmit={handleSubmit} className="space-y-6 w-full">
+                <form onSubmit={(e: any) => e.preventDefault()} className="space-y-6 w-full">
                     <input
                         className="px-3 py-1.5 w-full"
                         name="email"
@@ -153,8 +152,8 @@ const Login = () => {
 
                     <button
                         className={`flex w-full justify-center rounded-xl ${isLoginButtonDisabled ? "bg-blue-500 opacity-40" : "bg-blue-500 opacity-100"} px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm ${!isLoginButtonDisabled && "hover:bg-blue-700 "}  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
-                        type="submit"
                         disabled={isLoginButtonDisabled}
+                        onClick={handleSubmit}
                     >
                         {loggingInProgess.email ? "Logging in" : "Log in"}
                         {loggingInProgess.email ?

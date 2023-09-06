@@ -15,7 +15,7 @@ const CardList = ({ data, handleTagClick }: {
   handleTagClick: (tagName: string) => void
 }) => {
   return (
-    <div className='mt-16 prompt_layout'>
+    <div className='mt-16 prompt_layout w-full md:w-auto'>
       {data.map((post) => (
         <Card
           key={post._id}
