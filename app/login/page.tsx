@@ -149,7 +149,6 @@ const Login = () => {
                         </span>
                         : <></>
                     }
-
                     <button
                         className={`flex w-full justify-center rounded-xl ${isLoginButtonDisabled ? "bg-blue-500 opacity-40" : "bg-blue-500 opacity-100"} px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm ${!isLoginButtonDisabled && "hover:bg-blue-700 "}  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
                         disabled={isLoginButtonDisabled}
@@ -164,10 +163,16 @@ const Login = () => {
                             : null
                         }
                     </button>
-                    <div className=" flex items-center justify-center dark:text-blue-300 text-blue-800 text-md">
-                        OR
-                    </div>
                 </form>
+                <button
+                    className='text-blue-600 dark:text-blue-400 text-sm'
+                    onClick={() => router.push('/register')}
+                >
+                    New user? Register here
+                </button>
+                <div className=" flex items-center justify-center dark:text-blue-300 text-blue-800 text-md">
+                    OR
+                </div>
                 <div
                     className="flex items-center justify-center dark:text-red-400 text-red-600 text-lg hover:cursor-pointer"
                 >

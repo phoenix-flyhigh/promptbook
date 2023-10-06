@@ -94,6 +94,17 @@ describe("Login page tests", () => {
         fireEvent.change(passwordBox, { target: { value: '2412412454' } })
         expect(loginBtn).toBeEnabled()
     })
+
+    it(`Should show the new user registration option and 
+        onClick should redirect to register page`, () => {
+        const registerOption = screen.getByText("New user? Register here");
+
+        expect(registerOption).toBeInTheDocument();
+       
+        fireEvent.click(registerOption)
+
+        expect(routerSpy).toHaveBeenCalledWith("/register")
+    })
 })
 
 describe("Login page tests for logged in users", () => {
