@@ -66,7 +66,6 @@ const CreatePost = () => {
         <>
           <Snackbar
             open={error}
-            autoHideDuration={1000}
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           >
             <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>

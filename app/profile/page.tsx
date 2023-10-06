@@ -79,7 +79,6 @@ const Profile = () => {
         <>
           <Snackbar
             open={showSuccessToast}
-            autoHideDuration={1000}
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           >
             <Alert onClose={() => setShowSuccessToast(false)} severity="success" sx={{ width: '100%' }}>
@@ -88,7 +87,6 @@ const Profile = () => {
           </Snackbar>
           <Snackbar
             open={showErrorToast}
-            autoHideDuration={1000}
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           >
             <Alert onClose={() => setShowErrorToast(false)} severity="error" sx={{ width: '100%' }}>
