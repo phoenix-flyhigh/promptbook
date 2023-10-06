@@ -7,9 +7,9 @@ import { usePathname } from 'next/navigation';
 const NavBar: () => JSX.Element = () => {
     const isUserLoggedIn: UserDetailsFromSession = AuthUtil.useUserFromSession();
     const pathname = usePathname();
-    const isLoginPage = pathname === '/login';
+    const shouldNotRenderNav = pathname === '/login' || '/register';
 
-    return isLoginPage ?
+    return shouldNotRenderNav ?
         <></>
         :
         <NavBarView isUserLoggedIn={isUserLoggedIn} />
