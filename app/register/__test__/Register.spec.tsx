@@ -15,6 +15,17 @@ jest.mock("next/navigation", () => {
     };
 });
 
+jest.mock('next-auth/react', () => {
+    const actual = jest.requireActual("next-auth/react");
+    return {
+        ...actual,
+        signIn: jest.fn().mockImplementation(() =>
+            Promise.resolve({ error: '', status: 200, ok: true, url: '' })
+        )
+    }
+});
+
+
 const getFormFields = () => {
     const emailBox = screen.getByPlaceholderText("Enter your email")
     const passwordBox = screen.getByPlaceholderText("Enter your password")

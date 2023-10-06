@@ -1,7 +1,7 @@
 "use client"
 
 import UserService from '@/utils/UserService'
-import { useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -95,7 +95,13 @@ const Register = () => {
             password: data.password
         })
             .then(() => {
-                router.push('/')
+                signIn('credentials',
+                    {
+                        email: data.email,
+                        password: data.password,
+                        redirect: false
+                    })
+                    router.push('/')
             })
             .catch((e) => {
                 if (e.response?.data === "Email already exists") {
