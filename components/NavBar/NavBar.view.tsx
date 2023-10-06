@@ -2,11 +2,12 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { UserDetailsFromSession } from "@/utils/AuthUtil";
 import ThemeSwitcher from "../ThemeSwitcher";
 import { useRouter } from "next/navigation";
+import ThemeChangeButton from "../ThemeChangeButton";
 
 interface NavBarViewProps {
     isUserLoggedIn: UserDetailsFromSession
@@ -18,7 +19,7 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
     const { data: session }: any = useSession();
     const [toggleProfileMenu, setToggleProfileMenu] = useState(false);
     const router = useRouter();
-    
+
     return (
         <nav className="flex-between w-full mb-16 pt-3">
             <Link href="/" className="flex gap-2 flex-center pt-3" data-testid="tid-app-logo">
@@ -29,6 +30,7 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                 isUserLoggedIn ?
                     (
                         <div className="flex relative">
+                            <ThemeChangeButton />
                             <Image
                                 data-testid="tid-profile-icon-mobile"
                                 src={isUserLoggedIn.image?.length ? isUserLoggedIn.image : "/icons/profile-icon.svg"}
