@@ -1,7 +1,6 @@
 import { screen, fireEvent } from "@testing-library/react";
 import NavBar from "@/components/NavBar";
 import renderWithSession from "@/utils/TestUtil";
-import { ThemeProvider } from "next-themes";
 
 const routerSpy = jest.fn();
 
@@ -77,55 +76,11 @@ describe("NavBar component tests for signedIn users", () => {
         const createPromptOption: HTMLElement = screen.getByText("Create Post");
         const signOutOption: HTMLElement = screen.getByText("Sign Out");
         const myProfileOption: HTMLElement = screen.getByText("My Profile");
-        const themeButton: HTMLElement = screen.getByText("Switch to Dark Theme");
 
         expect(dropdown).toBeInTheDocument();
         expect(createPromptOption).toBeInTheDocument();
         expect(signOutOption).toBeInTheDocument();
         expect(myProfileOption).toBeInTheDocument();
-        expect(themeButton).toBeInTheDocument();
-    })
-
-    it("Should change theme button title on changing theme from light to dark", async () => {
-        renderWithSession(
-            <ThemeProvider attribute="class">
-                <NavBar />
-            </ThemeProvider>
-            , {
-                expires: "",
-                user: {
-                    name: "s",
-                    image: "/logo.png"
-                }
-            });
-        openProfileMenu()
-        const themeButton: HTMLElement = screen.getByText("Switch to Dark Theme");
-        fireEvent.click(themeButton)
-        openProfileMenu()
-
-        expect(screen.getByText("Switch to Light Theme")).toBeInTheDocument();
-        expect(screen.queryByText("Switch to Dark Theme")).not.toBeInTheDocument();
-    })
-
-    it("Should change theme button title on changing theme from dark to light", async () => {
-        renderWithSession(
-            <ThemeProvider attribute="class" defaultTheme="dark">
-                <NavBar />
-            </ThemeProvider>
-            , {
-                expires: "",
-                user: {
-                    name: "s",
-                    image: "/logo.png"
-                }
-            });
-        openProfileMenu()
-        const themeButton: HTMLElement = screen.getByText("Switch to Light Theme");
-        fireEvent.click(themeButton)
-        openProfileMenu()
-
-        expect(screen.getByText("Switch to Dark Theme")).toBeInTheDocument();
-        expect(screen.queryByText("Switch to Light Theme")).not.toBeInTheDocument();
     })
 })
 

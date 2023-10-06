@@ -5,7 +5,6 @@ import Link from "next/link"
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { UserDetailsFromSession } from "@/utils/AuthUtil";
-import ThemeSwitcher from "../ThemeSwitcher";
 import { useRouter } from "next/navigation";
 import ThemeChangeButton from "../ThemeChangeButton";
 
@@ -57,9 +56,6 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                                         >
                                             Create Post
                                         </Link>
-                                        <p className="dropdown_link">
-                                            <ThemeSwitcher onClick={() => setToggleProfileMenu(false)} />
-                                        </p>
                                         <button
                                             type="button"
                                             className="mt-5 w-full black_btn"
