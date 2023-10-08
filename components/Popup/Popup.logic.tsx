@@ -1,6 +1,6 @@
 "use client"
-import { useEffect } from "react";
 import PopupView from "./Popup.view";
+import useOutsideClick from "@/utils/useOutsideClick";
 
 export interface PopupProps {
     title: string,
@@ -17,22 +17,10 @@ const Popup: React.FC<PopupProps> = ({
     buttonText,
     onClose
 }) => {
-
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            const target = e.target as HTMLElement;
-            if(!(target.closest('.popup-content'))){
-                onClose();
-            }
-        }
-
-        window.addEventListener('click', handleClickOutside)
-
-        return (() => {
-            window.removeEventListener('click', handleClickOutside)
-        })
-    }, [onClose])
-    
+    const isOutsideClicked = useOutsideClick('.popup-content');
+    if(isOutsideClicked){
+        onClose();
+    }
     return (
         <PopupView
             title={title}
