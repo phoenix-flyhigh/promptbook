@@ -5,7 +5,7 @@ const useOutsideClick = (
 ) => {
     const [isOutsideClicked, setIsOutsideClicked] = useState<boolean>(false);
     useEffect(() => {
-        if(!elementRef) return;
+        if (!elementRef) return;
         const handleClickOutside = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
             if (elementRef.current && !elementRef.current.contains(target)) {

@@ -2,11 +2,12 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { UserDetailsFromSession } from "@/utils/AuthUtil";
 import { useRouter } from "next/navigation";
 import ThemeChangeButton from "../ThemeChangeButton";
+import ProfileMenu from "../Dropdown";
 
 interface NavBarViewProps {
     isUserLoggedIn: UserDetailsFromSession
@@ -37,36 +38,17 @@ const NavBarView: (props: NavBarViewProps) => JSX.Element = ({
                                 width={37}
                                 height={37}
                                 className="rounded-full dark:bg-slate-200 bg-slate-300 p-[2px]"
-                                onClick={() => setToggleProfileMenu((prev: boolean) => !prev)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setToggleProfileMenu((prev: boolean) => !prev)
+                                }}
                             />
                             {
                                 toggleProfileMenu && (
-                                    <div className="dropdown" data-testid="tid-nav-dropdown">
-                                        <Link
-                                            href={`/profile?id=${session?.user.id}`}
-                                            className="dropdown_link"
-                                            onClick={() => setToggleProfileMenu(false)}
-                                        >
-                                            My Profile
-                                        </Link>
-                                        <Link
-                                            href="/create-post"
-                                            className="dropdown_link"
-                                            onClick={() => setToggleProfileMenu(false)}
-                                        >
-                                            Create Post
-                                        </Link>
-                                        <button
-                                            type="button"
-                                            className="mt-5 w-full black_btn"
-                                            onClick={() => {
-                                                setToggleProfileMenu(false);
-                                                signOut();
-                                            }}
-                                        >
-                                            Sign Out
-                                        </button>
-                                    </div>
+                                    <ProfileMenu
+                                        userId={session?.user.id}
+                                        onClose={() => setToggleProfileMenu(false)}
+                                    />
                                 )}
                         </div>
                     ) : <>

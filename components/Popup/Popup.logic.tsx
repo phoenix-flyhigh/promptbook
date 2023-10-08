@@ -20,12 +20,12 @@ const Popup: React.FC<PopupProps> = ({
 }) => {
     const popupRef = useRef(null);
     const isOutsideClicked = useOutsideClick(popupRef);
-    if(isOutsideClicked){
+    if (isOutsideClicked) {
         onClose();
     }
     return (
         <PopupView
-        popupRef={popupRef}
+            popupRef={popupRef}
             title={title}
             description={description}
             buttonHandler={buttonHandler}
