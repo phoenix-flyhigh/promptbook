@@ -61,6 +61,50 @@ describe("My profile page tests", () => {
     })
 })
 
+describe("Profile photo tests in profile page", () => {
+
+    beforeEach(() => jest.clearAllMocks())
+
+    it("Should render user image if user has an image", async () => {
+        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
+            creator: {
+                ...getMockCreator("23"),
+                image: "/profileImage"
+            },
+            posts: [mockPostsResponse[1]]
+        })
+        renderWithSession(<Profile />, {
+            user: {
+                id: "23",
+                image: "/img"
+            }
+        })
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+
+        const profilePhoto = screen.getByAltText("Profile photo")
+        expect(profilePhoto).toBeInTheDocument();
+        expect(profilePhoto.getAttribute('src')).toContain("profileImage")
+    })
+
+    it("Should render default image if user has no image", async () => {
+        jest.spyOn(UserService, "getPostsByUser").mockResolvedValue({
+            creator: getMockCreator("23"),
+            posts: [mockPostsResponse[1]]
+        })
+        renderWithSession(<Profile />, {
+            user: {
+                id: "23",
+                image: "/img"
+            }
+        })
+        await waitForElementToBeRemoved(() => screen.getByText("Loading..."))
+
+        const profilePhoto = screen.getByAltText("Profile photo")
+        expect(profilePhoto).toBeInTheDocument();
+        expect(profilePhoto.getAttribute('src')).toBe("/icons/profile-icon.svg")
+    })
+})
+
 describe("My profile page tests for other users", () => {
     beforeEach(() => {
         jest.clearAllMocks()

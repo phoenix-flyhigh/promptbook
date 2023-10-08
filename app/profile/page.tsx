@@ -95,6 +95,7 @@ const Profile = () => {
           </Snackbar>
           <ProfileContentLayout
             name={`${userDetails.username}'s`}
+            imageSrc={userDetails.image?.length ? userDetails.image : "/icons/profile-icon.svg"}
             desc={isLoggedInUserProfile ? `Welcome to your personalized profile page.` : ""}
             data={posts}
             handleEdit={handleEdit}

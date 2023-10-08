@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ProfileProps } from "./ProfileContentLayout.logic";
 import DeleteConfirmationDialog from "@/components/DeleteConfirmationDialog";
 import { Post } from "@/utils/PromptService";
+import Image from "next/image"
 
 interface ProfileViewProps extends ProfileProps {
     isLoggedInUserProfile: boolean,
@@ -13,6 +14,7 @@ interface ProfileViewProps extends ProfileProps {
 
 const ProfileContentLayoutView = ({
     name,
+    imageSrc,
     desc,
     data,
     handleEdit,
@@ -25,7 +27,14 @@ const ProfileContentLayoutView = ({
 
     return (
         <section className='w-full'>
-            <h1 className='head_text text-left'>
+            <h1 className='head_text text-left flex gap-4 items-end'>
+                <Image
+                    src={imageSrc}
+                    width={80}
+                    height={80}
+                    alt="Profile photo"
+                    className="bg-slate-300 dark:bg-slate-200 rounded-full"
+                />
                 <span className='blue_gradient'>{name} Profile</span>
             </h1>
             <p className='desc text-left'>{desc}</p>

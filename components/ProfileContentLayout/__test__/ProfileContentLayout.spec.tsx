@@ -25,8 +25,9 @@ describe("ProfileContentLayout component tests", () => {
 
     it("Should render the user profile", () => {
         renderWithSession(<ProfileContentLayout
-            name={"My name"}
-            desc={"Description"}
+            name="My name"
+            imageSrc="/img"
+            desc="Description"
             data={[mockPostsResponse[1]]}
             handleEdit={() => { }}
             handleDelete={() => { }}
@@ -35,6 +36,7 @@ describe("ProfileContentLayout component tests", () => {
             user: { id: "23" }
         })
 
+        expect(screen.getByAltText("Profile photo")).toBeInTheDocument();
         expect(screen.getByText("My name Profile")).toBeInTheDocument();
         expect(screen.getByText("Description")).toBeInTheDocument();
         expect(screen.getByTestId("tid-prompt-card")).toBeInTheDocument();
@@ -44,6 +46,7 @@ describe("ProfileContentLayout component tests", () => {
         when there are no posts`, () => {
         renderWithSession(<ProfileContentLayout
             name={"My name"}
+            imageSrc="/img"
             desc={"Description"}
             data={[]}
             handleEdit={() => { }}

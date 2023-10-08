@@ -4,6 +4,7 @@ import ProfileContentLayoutView from "./ProfileContentLayout.view"
 
 export interface ProfileProps {
     name: string,
+    imageSrc: string,
     desc: string,
     data: Post[],
     handleEdit: (post: Post) => void,
@@ -13,6 +14,7 @@ export interface ProfileProps {
 
 const ProfileContentLayout = ({
     name,
+    imageSrc,
     desc,
     data,
     handleEdit,
@@ -25,6 +27,7 @@ const ProfileContentLayout = ({
 
     return (
         <ProfileContentLayoutView
+            imageSrc={imageSrc}
             name={name}
             desc={desc}
             data={data}
