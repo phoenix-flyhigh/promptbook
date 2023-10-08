@@ -6,20 +6,6 @@ import { ThemeProvider } from "next-themes"
 
 const routerSpy = jest.fn()
 
-Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation(query => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(), // Deprecated
-        removeListener: jest.fn(), // Deprecated
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-    })),
-});
-
 jest.mock("next/navigation", () => {
     const actual = jest.requireActual("next/navigation");
     return {
@@ -81,6 +67,23 @@ describe("Card component tests", () => {
 
         expect(routerSpy).toHaveBeenCalledTimes(1)
         expect(routerSpy).toHaveBeenCalledWith('/profile?id=1')
+    })
+})
+
+describe("Card without session tests", () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    })
+
+    it(`Should show login popup if user is not signed in 
+        and clicks on user profile`, () => {
+            renderWithSession(<Card post={mockPostsResponse[0]} handleTagClick={() => { }} />, null)
+       
+            const authorSection = screen.getByTestId("tid-author-section")
+            fireEvent.click(authorSection)
+    
+            expect(routerSpy).toHaveBeenCalledTimes(0)
+            expect(screen.getByText("Please login to view more")).toBeInTheDocument();
     })
 })
 
