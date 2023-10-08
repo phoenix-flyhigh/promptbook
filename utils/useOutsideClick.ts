@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const useOutsideClick = (
-    elementIdentifier: string
+    elementRef: any
 ) => {
     const [isOutsideClicked, setIsOutsideClicked] = useState<boolean>(false);
     useEffect(() => {
+        if(!elementRef) return;
         const handleClickOutside = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
-            if (!(target.closest(elementIdentifier))) {
+            if (elementRef.current && !elementRef.current.contains(target)) {
                 setIsOutsideClicked(true)
             }
         }
@@ -17,7 +18,7 @@ const useOutsideClick = (
         return (() => {
             window.removeEventListener('click', handleClickOutside)
         })
-    }, [elementIdentifier])
+    }, [elementRef])
 
     return isOutsideClicked;
 }

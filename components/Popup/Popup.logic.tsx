@@ -1,4 +1,5 @@
 "use client"
+import { useRef } from "react";
 import PopupView from "./Popup.view";
 import useOutsideClick from "@/utils/useOutsideClick";
 
@@ -17,12 +18,14 @@ const Popup: React.FC<PopupProps> = ({
     buttonText,
     onClose
 }) => {
-    const isOutsideClicked = useOutsideClick('.popup-content');
+    const popupRef = useRef(null);
+    const isOutsideClicked = useOutsideClick(popupRef);
     if(isOutsideClicked){
         onClose();
     }
     return (
         <PopupView
+        popupRef={popupRef}
             title={title}
             description={description}
             buttonHandler={buttonHandler}
