@@ -9,7 +9,14 @@ const config = {
   testRunner_comment:
   "Take a look at (missing 'homepage' URL in package.json) for information about the jest plugin.",
   coverageAnalysis: "perTest",
-  mutate:['app/**/page.tsx'],
+  mutate:[
+    'app/**/page.tsx', 
+    'app/page.tsx',
+    'app/layout.tsx',
+    'components/*',
+    'components/**/*.tsx',
+    'utils/*'
+  ],
   thresholds: {
     high: 90,
     low: 70,

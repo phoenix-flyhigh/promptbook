@@ -25,7 +25,7 @@ To run mutation tests, run the following command
 ```bash
 npm run test:mutation
 ```
-
+Note: To run mutation tests, remove the stryker-tmp file from the "testPathIgnorePatterns" in jest.config.js file.
 ## Local environment Setup
 To set it up in the local, add a dotenv file with the following keys:
 
@@ -34,13 +34,18 @@ From the OAuth client created in console.cloud.google.com
 2. GOOGLE_CLIENT_SECRET
 
 From the database created in free cluster in mongo db atlas
+
 3. MONGODB_URI
 
 The url where the local app is running
+
 4. NEXTAUTH_URL=http://localhost:3000/
 
 The redirection url after successful authentication
+
 5. NEXTAUTH_URL_INTERNAL=http://localhost:3000
 
-A 64 bit secret generated for next auth. Command to create it -> openssl rand -base64 32 
+A 64 bit secret generated for next auth. 
+Command to create it -> openssl rand -base64 32 
+
 6. NEXTAUTH_SECRET

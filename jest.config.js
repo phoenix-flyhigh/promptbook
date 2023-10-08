@@ -10,7 +10,7 @@ const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
   testPathIgnorePatterns : [
-    "stryker-tmp" 
+    "stryker-tmp"  // comment out this line b4 running mutation tests
   ],
   coverageThreshold: {
     "global": {
