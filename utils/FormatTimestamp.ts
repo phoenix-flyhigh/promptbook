@@ -8,16 +8,16 @@ const formatTimeAgo = (timestamp: Date) => {
     const postedTime: number = Number(new Date(timestamp));
     
     const timeDifferenceInDays = Math.floor((currentTime - postedTime) / (1000 * 86400));
-
+    
     if (timeDifferenceInDays > 6) {
-        const currentYear = new Date().getFullYear()
+        const currentYear = new Date(currentTime).getFullYear()
         const postedDate = new Date(timestamp)
         
         const postedYear = postedDate.getFullYear()
         const postedDayNumber = postedDate.getDate()
         const postedMonthNumber = postedDate.getMonth()
         const postedMonth = months[postedMonthNumber]
-
+            
         if (currentYear === postedYear)
             return `${postedMonth} ${postedDayNumber}`
 

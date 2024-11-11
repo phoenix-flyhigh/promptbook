@@ -11,7 +11,7 @@ export const GET = async () => {
             status: 200
         })
     } catch (error) {
-        return new Response("Failed to fetch posts", {
+        return new Response(`Failed to fetch posts - ${error}`, {
             status: 500
         })
     }
